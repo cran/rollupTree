@@ -13,10 +13,10 @@ library(rollupTree)
 wbs_table
 
 ## ----wbs_tree-plot------------------------------------------------------------
-library(igraph)
-wbs_tree <- graph_from_edgelist(
-  as.matrix(wbs_table[which(!is.na(wbs_table$pid)), c("id", "pid")]),
-  directed = TRUE
+library(rollupTree)
+wbs_tree <- create_rollup_tree(
+  get_keys = function() wbs_table$id,
+  get_parent_key_by_child_key = function(key) wbs_table[wbs_table$id == key, "pid"]
 )
 
 ## -----------------------------------------------------------------------------
@@ -145,8 +145,8 @@ list_validate <- function(t, d) validate_ds(t, d, get_keys = function(l) names(l
 list_result <- rollup(wbs_tree, wbs_list, list_update, list_validate)
 str(list_result)
 
-
 ## -----------------------------------------------------------------------------
+library(igraph)
 new_wbs_tree <- Reduce(
   f = function(g, k) set_vertex_attr(g, 'budget', k, df_get_by_id(wbs_table, k, 'budget')),
   x = names(V(wbs_tree)),
@@ -167,4 +167,58 @@ tree_result <- rollup(new_wbs_tree, new_wbs_tree, update = tree_update, validate
 ob <- vertex_attr(tree_result, "budget")
 names(ob) <- names(V(tree_result))
 ob
+
+## ----echo = FALSE-------------------------------------------------------------
+fault_table
+
+## ----echo = FALSE-------------------------------------------------------------
+igraph::E(fault_tree)
+
+## -----------------------------------------------------------------------------
+df_get_fault_props <- function(df, id) {
+  list(
+    type = df_get_by_id(df, id, "type"),
+    prob = df_get_by_id(df, id, "prob")
+  )
+}
+
+df_set_fault_props <- function(df, id, v) {
+  df_set_by_id(df, id, "prob", v$prob)
+}
+
+## -----------------------------------------------------------------------------
+combine_fault_props <- function(vl, type) {
+  list(
+    prob = Reduce(
+      f = if (type == "and") "*" else "+",
+      Map(f = function(v) v$prob, vl)
+    )
+  )
+}
+
+update_fault_props <- function(ds, parent_key, child_keys) {
+  update_prop(
+    ds,
+    target = parent_key,
+    sources = child_keys,
+    set = df_set_fault_props,
+    get = df_get_fault_props,
+    combine = function(vl)
+      combine_fault_props(vl, df_get_fault_props(ds, parent_key)$type)
+  )
+}
+
+validate_fault_props <- function(fp) {
+  if (fp$type != "basic") stop(sprintf("invalid leaf node type %s", fp$type))
+  if (!is.numeric(fp$prob) || fp$prob < 0.0 || fp$prob > 1.0)
+    stop(sprintf("invalid probability value %f", fp$prob))
+  TRUE
+}
+
+validate_fault_props_table <- function(tree, df) {
+  validate_ds(tree, df, df_get_ids, df_get_fault_props, validate_fault_props)
+}
+
+## ----echo = FALSE-------------------------------------------------------------
+rollup(fault_tree, fault_table, update_fault_props, validate_fault_props_table)
 
