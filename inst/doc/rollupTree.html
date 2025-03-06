@@ -379,6 +379,10 @@ properties and property-combining operations. Defaults are provided to
 simplify common cases (atomic numerical properties combined by summing),
 but functional programming techniques allow the caller to pass arbitrary
 <em>update</em> methods as required.</p>
+<p>Despite its name, rollupTree can operate on directed acyclic graphs
+that are not trees if instructed to apply less stringent validation
+rules to its input. See <code>default_validate_dag()</code> and
+<code>rollup()</code>.</p>
 </div>
 <div id="example-with-a-data-frame" class="section level1">
 <h1>Example With A Data Frame</h1>
@@ -438,7 +442,7 @@ our data frame:</p>
 is suitable for our purpose. Here is what <code>rollup()</code> uses
 internally:</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>igraph<span class="sc">::</span><span class="fu">topo_sort</span>(wbs_tree)</span>
-<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a><span class="co">#&gt; + 10/10 vertices, named, from fe91122:</span></span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a><span class="co">#&gt; + 10/10 vertices, named, from d50fdd6:</span></span>
 <span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a><span class="co">#&gt;  [1] 1.1 1.2 2.1 2.2 3.1 3.2 1   2   3   top</span></span></code></pre></div>
 <!--# plot created by coords <- layout_(wbs_tree, as_tree(mode="in")) plot(wbs_tree, layout=coords, vertex.size = 30) -->
 </div>
