@@ -1,6 +1,6 @@
 Package: rollupTree
 Title: Perform Recursive Computations
-Version: 0.3.0
+Version: 0.3.1
 Authors@R: 
     person(given=c("James", "Steven"), family="Jenkins",
       email = "sjenkins@studioj.us",
@@ -21,9 +21,9 @@ URL: https://jsjuni.github.io/rollupTree/,
         https://github.com/jsjuni/rollupTree
 BugReports: https://github.com/jsjuni/rollupTree/issues
 NeedsCompilation: no
-Packaged: 2025-03-06 14:50:00 UTC; sjenkins
+Packaged: 2025-04-18 19:45:18 UTC; sjenkins
 Author: James Steven Jenkins [aut, cre, cph]
     (<https://orcid.org/0000-0002-0725-0884>)
 Maintainer: James Steven Jenkins <sjenkins@studioj.us>
 Repository: CRAN
-Date/Publication: 2025-03-06 16:20:06 UTC
+Date/Publication: 2025-04-19 06:20:02 UTC

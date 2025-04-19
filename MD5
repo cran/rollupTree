@@ -1,7 +1,7 @@
-0ba42b7d2405ba3cd4afe72b700b4819 *DESCRIPTION
+599a5b3d113fc33f6d18b3aca8ff4d42 *DESCRIPTION
 68c64af5cbd150a35cf0ee85c1091626 *LICENSE
 5ca63e6d704610dd3565f6b7788b9f36 *NAMESPACE
-be0a2684dc79aa274a166dc79725b00a *NEWS.md
+09d8565015b6ac3c121df6624695fcdd *NEWS.md
 48aa77674e2acbea593f2e88059c8d9f *R/fault_table.R
 5f297fbf1ff00fb039307b1590854627 *R/fault_tree.R
 252c8c954571eb584f59d8cedea9dc41 *R/rollup.R
@@ -10,7 +10,7 @@ f4940fbb3273162f1eea1f5ec4e20bfb *R/update_prop.R
 727be5ae7f390ea4da802635dce55137 *R/wbs_table.R
 9f746971ff988c8d745f3e7aea83d0e7 *R/wbs_table_rollup.R
 dc9e5f875c7fd49198699f9bd930a400 *R/wbs_tree.R
-13b8057b11116812c36ab8e9b56aab25 *README.md
+8c9cab8b58f6fe99b8ca6d7579e9eeea *README.md
 b9a9d8bbaf230f37ee14d6adf443dc3e *build/vignette.rds
 32a945393bb4b5ecb5fb0676af7af07e *data/fault_table.rda
 23c592b814e6904555becf691e660716 *data/fault_tree.rda
@@ -20,7 +20,7 @@ dae02ab2edeb396be1d3af28721de38e *data/wbs_table.rda
 5f53b1f30e71699f83085680d5e6684b *data/wbs_tree.rda
 cf04d175eae1326409a510ab1a87b890 *inst/doc/rollupTree.R
 53a66a9bfd9dd56d2d64ae3cec29992b *inst/doc/rollupTree.Rmd
-3bb28e2ac77c899a756737c91b5a6d07 *inst/doc/rollupTree.html
+f8be55f86b1570609a9984540918af10 *inst/doc/rollupTree.html
 adb4861c844f18a68d8c4a29b0c90aba *man/create_rollup_tree.Rd
 77ec5af9651f86d963029fb099848605 *man/default_validate_dag.Rd
 a5cd3f52384ce057cd9d50103da2cc47 *man/default_validate_tree.Rd
