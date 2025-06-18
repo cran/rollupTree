@@ -364,7 +364,6 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 
 
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(rollupTree)</span></code></pre></div>
 <div id="overview" class="section level1">
 <h1>Overview</h1>
 <p><code>rollupTree</code> implements a general function for
@@ -404,46 +403,45 @@ are initially unknown. Each element is uniquely identified by an
 <code>id</code> column<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a>. We also indicate parent id in the
 <code>pid</code> column but this information is not used directly by
 <code>rollup()</code>.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">library</span>(rollupTree)</span>
-<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>wbs_table</span>
-<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="co">#&gt;     id  pid                    name work budget</span></span>
-<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="co">#&gt; 1  top &lt;NA&gt; Construction of a House   NA     NA</span></span>
-<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a><span class="co">#&gt; 2    1  top                Internal   NA     NA</span></span>
-<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a><span class="co">#&gt; 3    2  top              Foundation   NA     NA</span></span>
-<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a><span class="co">#&gt; 4    3  top                External   NA     NA</span></span>
-<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a><span class="co">#&gt; 5  1.1    1              Electrical 11.8  25000</span></span>
-<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a><span class="co">#&gt; 6  1.2    1                Plumbing 33.8  61000</span></span>
-<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a><span class="co">#&gt; 7  2.1    2                Excavate 18.2  37000</span></span>
-<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a><span class="co">#&gt; 8  2.2    2          Steel Erection  5.8   9000</span></span>
-<span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a><span class="co">#&gt; 9  3.1    3            Masonry Work 16.2  62000</span></span>
-<span id="cb2-13"><a href="#cb2-13" tabindex="-1"></a><span class="co">#&gt; 10 3.2    3       Building Finishes 14.2  21500</span></span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(rollupTree)</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>wbs_table</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="co">#&gt;     id  pid                    name work budget</span></span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a><span class="co">#&gt; 1  top &lt;NA&gt; Construction of a House   NA     NA</span></span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a><span class="co">#&gt; 2    1  top                Internal   NA     NA</span></span>
+<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a><span class="co">#&gt; 3    2  top              Foundation   NA     NA</span></span>
+<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a><span class="co">#&gt; 4    3  top                External   NA     NA</span></span>
+<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a><span class="co">#&gt; 5  1.1    1              Electrical 11.8  25000</span></span>
+<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a><span class="co">#&gt; 6  1.2    1                Plumbing 33.8  61000</span></span>
+<span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a><span class="co">#&gt; 7  2.1    2                Excavate 18.2  37000</span></span>
+<span id="cb1-11"><a href="#cb1-11" tabindex="-1"></a><span class="co">#&gt; 8  2.2    2          Steel Erection  5.8   9000</span></span>
+<span id="cb1-12"><a href="#cb1-12" tabindex="-1"></a><span class="co">#&gt; 9  3.1    3            Masonry Work 16.2  62000</span></span>
+<span id="cb1-13"><a href="#cb1-13" tabindex="-1"></a><span class="co">#&gt; 10 3.2    3       Building Finishes 14.2  21500</span></span></code></pre></div>
 <p>A key feature of recursively-defined problems like this is that the
-computations must be ordered in such a way that the computations for a
-given element must occur after properties for it children are known
-(either asserted or computed). Traversing a tree in this manner can be
-achieved by using a well-known algorithm in graph theory known as
-<em>topological sort</em>. For that reason, we construct an
-<code>igraph</code> <span class="citation">(Csárdi et al. 2025)</span>
-graph object in R, from which we can conveniently (1) check that the
-graph is in fact a well-formed tree, and (2) efficiently execute a
-topological sort to order the computations. (Note that, although the
-problems solved by rollup are <em>defined</em> recursively, the
-implementation in software is not recursive.)</p>
+computation for a given element must occur after properties for it
+children are known (either asserted or computed). Traversing a tree in
+this manner can be achieved by using a well-known algorithm in graph
+theory known as <em>topological sort</em>. For that reason, we construct
+an <code>igraph</code> <span class="citation">(Csárdi et al.
+2025)</span> graph object in R, from which we can conveniently (1) check
+that the graph is in fact a well-formed tree, and (2) efficiently
+execute a topological sort to order the computations. (Note that,
+although the problems solved by rollup are <em>defined</em> recursively,
+the implementation in software is not recursive.)</p>
 <p>It is a simple matter to construct a graph from the information in
 our data frame:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="fu">library</span>(rollupTree)</span>
-<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>wbs_tree <span class="ot">&lt;-</span> <span class="fu">create_rollup_tree</span>(</span>
-<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>  <span class="at">get_keys =</span> <span class="cf">function</span>() wbs_table<span class="sc">$</span>id,</span>
-<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>  <span class="at">get_parent_key_by_child_key =</span> <span class="cf">function</span>(key) wbs_table[wbs_table<span class="sc">$</span>id <span class="sc">==</span> key, <span class="st">&quot;pid&quot;</span>]</span>
-<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">library</span>(rollupTree)</span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>wbs_tree <span class="ot">&lt;-</span> <span class="fu">create_rollup_tree</span>(</span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a>  <span class="at">get_keys =</span> <span class="cf">function</span>() wbs_table<span class="sc">$</span>id,</span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a>  <span class="at">get_parent_key_by_child_key =</span> <span class="cf">function</span>(key) wbs_table[wbs_table<span class="sc">$</span>id <span class="sc">==</span> key, <span class="st">&quot;pid&quot;</span>]</span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a>)</span></code></pre></div>
 <div id="wbs-tree" class="section level2">
 <h2><img role="img" aria-label="WBS Tree" src="data:image/png;base64,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gARIgARIgA6Y1wAJkAAJkAAJOECADtgB6KySBEiABEiABOiAeQ2QAAmQAAmQgAME6IAdgM4qSYAESIAESIAOmNcACZAACZAACThAgA7YAeiskgRIgARIgATogHkNkAAJkAAJkIADBOiAHYDOKkmABEiABEiADpjXAAmQAAmQAAk4QIAO2AHorJIESIAESIAE6IB5DZAACZAACZCAAwTogB2AzipJgARIgARIgA6Y1wAJkAAJkAAJOECADtgB6KySBEiABEiABOiAeQ2QAAmQAAmQgAME6IAdgM4qSYAESIAESIAOmNcACZAACZAACThAgA7YAeiskgRIgARIgATogHkNkAAJkAAJkIADBOiAHYDOKkmABEiABEiADpjXAAmQAAmQAAk4QIAO2AHorJIESIAESIAE6IB5DZAACZAACZCAAwTogB2AzipJgARIgARIgA6Y1wAJkAAJkAAJOECADtgB6KySBEiABEiABOiAeQ2QAAmQAAmQgAME6IAdgM4qSYAESIAESIAOmNcACZAACZAACThAgA7YAeiskgRIgARIgATogHkNkAAJkAAJkIADBIIdqJNVkgAJ2EigpKQE27dvR0ZGBvbv34+8o4dQXJCP8KgGiKrfAImJiWjRogXatGmDwEC+k9toGlZVxwkElGupjjOg+iRQ6wjk5ORg9uxZmDvjv9i8YTWaNziG2Ig8xIXlIjS4HGH1gIJioKg0CPsKGiCrIBIHCsPQq+8QjBxzCYYOHYrw8PBax4UKkYBKBOiAVbIGZSEBHwmkpqbii0/fxaLZP6Fn3EEMSspDh/gAhIYE1FhybmE5Nu8px/z0RtiZ2wTnjrsel191HRo3blzjucxAAiTgPQE6YO+Z8QwSUI5Abm4uPnj3dfw+eQLOar0H53QrR73gmp1uVYqIM/55dT0s3peIq256BH+9/EoEB3PEqipe3E8CRgjQARuhxnNIQCECK1euxNOP3IqeDbbg8v7FPjneymrl5JXjs6X1cbT+ADz14tto1apV5Sz8mwRIwCABOmCD4HgaCahA4MsvPsP3Hz6N2wZmokOCdQFUczeX4/vNyfjHix9h0KBBKqhOGUjA7wnQAfu9CalAXSXw5OOPYsuCCXjkrBxEhxvvbvaU386sMpz3aikWLFyMPn37eXoa85EACVRBgA64CjDcTQIqE5jw6Ye47vqbsfb5UESF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" alt="WBS Tree" /></h2>
 <p>A directed acyclic graph may have more than one topological sort; any
 is suitable for our purpose. Here is what <code>rollup()</code> uses
 internally:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>igraph<span class="sc">::</span><span class="fu">topo_sort</span>(wbs_tree)</span>
-<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a><span class="co">#&gt; + 10/10 vertices, named, from 6e11234:</span></span>
-<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a><span class="co">#&gt;  [1] 1.1 1.2 2.1 2.2 3.1 3.2 1   2   3   top</span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>igraph<span class="sc">::</span><span class="fu">topo_sort</span>(wbs_tree)</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="co">#&gt; + 10/10 vertices, named, from 054ff07:</span></span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a><span class="co">#&gt;  [1] 1.1 1.2 2.1 2.2 3.1 3.2 1   2   3   top</span></span></code></pre></div>
 <!--# plot created by coords <- layout_(wbs_tree, as_tree(mode="in")) plot(wbs_tree, layout=coords, vertex.size = 30) -->
 </div>
 <div id="summing-a-single-numeric-property" class="section level2">
@@ -457,51 +455,51 @@ is named <code>id</code>, the package provides
 <code>update_df_prop_by_id()</code> and <code>validate_df_by_id()</code>
 functions that can be invoked as boilerplate. To roll up the
 <code>work</code> property, for example, we simply invoke:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu">rollup</span>(</span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>  <span class="at">tree=</span>wbs_tree,</span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>  <span class="at">ds=</span>wbs_table,</span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a>  <span class="at">update=</span><span class="cf">function</span>(d, t, s) <span class="fu">update_df_prop_by_id</span>(<span class="at">df=</span>d, <span class="at">target=</span>t, <span class="at">sources=</span>s, <span class="at">prop=</span><span class="st">&quot;work&quot;</span>),</span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a>  <span class="at">validate_ds=</span><span class="cf">function</span>(t, d) <span class="fu">validate_df_by_id</span>(<span class="at">tree=</span>t, <span class="at">df=</span>d, <span class="at">prop=</span><span class="st">&quot;work&quot;</span>)</span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a>)</span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a><span class="co">#&gt;     id  pid                    name  work budget</span></span>
+<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a><span class="co">#&gt; 1  top &lt;NA&gt; Construction of a House 100.0     NA</span></span>
+<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a><span class="co">#&gt; 2    1  top                Internal  45.6     NA</span></span>
+<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a><span class="co">#&gt; 3    2  top              Foundation  24.0     NA</span></span>
+<span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a><span class="co">#&gt; 4    3  top                External  30.4     NA</span></span>
+<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a><span class="co">#&gt; 5  1.1    1              Electrical  11.8  25000</span></span>
+<span id="cb4-13"><a href="#cb4-13" tabindex="-1"></a><span class="co">#&gt; 6  1.2    1                Plumbing  33.8  61000</span></span>
+<span id="cb4-14"><a href="#cb4-14" tabindex="-1"></a><span class="co">#&gt; 7  2.1    2                Excavate  18.2  37000</span></span>
+<span id="cb4-15"><a href="#cb4-15" tabindex="-1"></a><span class="co">#&gt; 8  2.2    2          Steel Erection   5.8   9000</span></span>
+<span id="cb4-16"><a href="#cb4-16" tabindex="-1"></a><span class="co">#&gt; 9  3.1    3            Masonry Work  16.2  62000</span></span>
+<span id="cb4-17"><a href="#cb4-17" tabindex="-1"></a><span class="co">#&gt; 10 3.2    3       Building Finishes  14.2  21500</span></span></code></pre></div>
+</div>
+<div id="chaining-rollups" class="section level2">
+<h2>Chaining Rollups</h2>
+<p>If we want to roll up the <code>budget</code> column as well, we can
+simply chain two <code>rollup()</code>s together. In this example we use
+R’s pipe operator:</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="fu">rollup</span>(</span>
 <span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>  <span class="at">tree=</span>wbs_tree,</span>
 <span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>  <span class="at">ds=</span>wbs_table,</span>
 <span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a>  <span class="at">update=</span><span class="cf">function</span>(d, t, s) <span class="fu">update_df_prop_by_id</span>(<span class="at">df=</span>d, <span class="at">target=</span>t, <span class="at">sources=</span>s, <span class="at">prop=</span><span class="st">&quot;work&quot;</span>),</span>
 <span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a>  <span class="at">validate_ds=</span><span class="cf">function</span>(t, d) <span class="fu">validate_df_by_id</span>(<span class="at">tree=</span>t, <span class="at">df=</span>d, <span class="at">prop=</span><span class="st">&quot;work&quot;</span>)</span>
-<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a>)</span>
-<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a><span class="co">#&gt;     id  pid                    name  work budget</span></span>
-<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a><span class="co">#&gt; 1  top &lt;NA&gt; Construction of a House 100.0     NA</span></span>
-<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a><span class="co">#&gt; 2    1  top                Internal  45.6     NA</span></span>
-<span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a><span class="co">#&gt; 3    2  top              Foundation  24.0     NA</span></span>
-<span id="cb5-11"><a href="#cb5-11" tabindex="-1"></a><span class="co">#&gt; 4    3  top                External  30.4     NA</span></span>
-<span id="cb5-12"><a href="#cb5-12" tabindex="-1"></a><span class="co">#&gt; 5  1.1    1              Electrical  11.8  25000</span></span>
-<span id="cb5-13"><a href="#cb5-13" tabindex="-1"></a><span class="co">#&gt; 6  1.2    1                Plumbing  33.8  61000</span></span>
-<span id="cb5-14"><a href="#cb5-14" tabindex="-1"></a><span class="co">#&gt; 7  2.1    2                Excavate  18.2  37000</span></span>
-<span id="cb5-15"><a href="#cb5-15" tabindex="-1"></a><span class="co">#&gt; 8  2.2    2          Steel Erection   5.8   9000</span></span>
-<span id="cb5-16"><a href="#cb5-16" tabindex="-1"></a><span class="co">#&gt; 9  3.1    3            Masonry Work  16.2  62000</span></span>
-<span id="cb5-17"><a href="#cb5-17" tabindex="-1"></a><span class="co">#&gt; 10 3.2    3       Building Finishes  14.2  21500</span></span></code></pre></div>
-<p><code>update_df_prop_by_id()</code> (like every well-behaved
-<em>update</em> method) modifies only the specified column and leaves
-the rest of the data frame unchanged. If we want to roll up the
-<code>budget</code> column as well, we can simply chain two
-<code>rollup()</code>s together. In this example we use R’s pipe
-operator:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="fu">rollup</span>(</span>
-<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>  <span class="at">tree=</span>wbs_tree,</span>
-<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>  <span class="at">ds=</span>wbs_table,</span>
-<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a>  <span class="at">update=</span><span class="cf">function</span>(d, t, s) <span class="fu">update_df_prop_by_id</span>(<span class="at">df=</span>d, <span class="at">target=</span>t, <span class="at">sources=</span>s, <span class="at">prop=</span><span class="st">&quot;work&quot;</span>),</span>
-<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a>  <span class="at">validate_ds=</span><span class="cf">function</span>(t, d) <span class="fu">validate_df_by_id</span>(<span class="at">tree=</span>t, <span class="at">df=</span>d, <span class="at">prop=</span><span class="st">&quot;work&quot;</span>)</span>
-<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a>) <span class="sc">|&gt;</span> <span class="fu">rollup</span>(</span>
-<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a>  <span class="at">tree=</span>wbs_tree,</span>
-<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a>  <span class="at">ds=</span>_,</span>
-<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a>  <span class="at">update=</span><span class="cf">function</span>(d, t, s) <span class="fu">update_df_prop_by_id</span>(<span class="at">df=</span>d, <span class="at">target=</span>t, <span class="at">sources=</span>s, <span class="at">prop=</span><span class="st">&quot;budget&quot;</span>),</span>
-<span id="cb6-10"><a href="#cb6-10" tabindex="-1"></a>  <span class="at">validate_ds=</span><span class="cf">function</span>(t, d) <span class="fu">validate_df_by_id</span>(<span class="at">tree=</span>t, <span class="at">df=</span>d, <span class="at">prop=</span><span class="st">&quot;budget&quot;</span>)</span>
-<span id="cb6-11"><a href="#cb6-11" tabindex="-1"></a>)</span>
-<span id="cb6-12"><a href="#cb6-12" tabindex="-1"></a><span class="co">#&gt;     id  pid                    name  work budget</span></span>
-<span id="cb6-13"><a href="#cb6-13" tabindex="-1"></a><span class="co">#&gt; 1  top &lt;NA&gt; Construction of a House 100.0 215500</span></span>
-<span id="cb6-14"><a href="#cb6-14" tabindex="-1"></a><span class="co">#&gt; 2    1  top                Internal  45.6  86000</span></span>
-<span id="cb6-15"><a href="#cb6-15" tabindex="-1"></a><span class="co">#&gt; 3    2  top              Foundation  24.0  46000</span></span>
-<span id="cb6-16"><a href="#cb6-16" tabindex="-1"></a><span class="co">#&gt; 4    3  top                External  30.4  83500</span></span>
-<span id="cb6-17"><a href="#cb6-17" tabindex="-1"></a><span class="co">#&gt; 5  1.1    1              Electrical  11.8  25000</span></span>
-<span id="cb6-18"><a href="#cb6-18" tabindex="-1"></a><span class="co">#&gt; 6  1.2    1                Plumbing  33.8  61000</span></span>
-<span id="cb6-19"><a href="#cb6-19" tabindex="-1"></a><span class="co">#&gt; 7  2.1    2                Excavate  18.2  37000</span></span>
-<span id="cb6-20"><a href="#cb6-20" tabindex="-1"></a><span class="co">#&gt; 8  2.2    2          Steel Erection   5.8   9000</span></span>
-<span id="cb6-21"><a href="#cb6-21" tabindex="-1"></a><span class="co">#&gt; 9  3.1    3            Masonry Work  16.2  62000</span></span>
-<span id="cb6-22"><a href="#cb6-22" tabindex="-1"></a><span class="co">#&gt; 10 3.2    3       Building Finishes  14.2  21500</span></span></code></pre></div>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a>) <span class="sc">|&gt;</span> <span class="fu">rollup</span>(</span>
+<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a>  <span class="at">tree=</span>wbs_tree,</span>
+<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a>  <span class="at">ds=</span>_,</span>
+<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a>  <span class="at">update=</span><span class="cf">function</span>(d, t, s) <span class="fu">update_df_prop_by_id</span>(<span class="at">df=</span>d, <span class="at">target=</span>t, <span class="at">sources=</span>s, <span class="at">prop=</span><span class="st">&quot;budget&quot;</span>),</span>
+<span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a>  <span class="at">validate_ds=</span><span class="cf">function</span>(t, d) <span class="fu">validate_df_by_id</span>(<span class="at">tree=</span>t, <span class="at">df=</span>d, <span class="at">prop=</span><span class="st">&quot;budget&quot;</span>)</span>
+<span id="cb5-11"><a href="#cb5-11" tabindex="-1"></a>)</span>
+<span id="cb5-12"><a href="#cb5-12" tabindex="-1"></a><span class="co">#&gt;     id  pid                    name  work budget</span></span>
+<span id="cb5-13"><a href="#cb5-13" tabindex="-1"></a><span class="co">#&gt; 1  top &lt;NA&gt; Construction of a House 100.0 215500</span></span>
+<span id="cb5-14"><a href="#cb5-14" tabindex="-1"></a><span class="co">#&gt; 2    1  top                Internal  45.6  86000</span></span>
+<span id="cb5-15"><a href="#cb5-15" tabindex="-1"></a><span class="co">#&gt; 3    2  top              Foundation  24.0  46000</span></span>
+<span id="cb5-16"><a href="#cb5-16" tabindex="-1"></a><span class="co">#&gt; 4    3  top                External  30.4  83500</span></span>
+<span id="cb5-17"><a href="#cb5-17" tabindex="-1"></a><span class="co">#&gt; 5  1.1    1              Electrical  11.8  25000</span></span>
+<span id="cb5-18"><a href="#cb5-18" tabindex="-1"></a><span class="co">#&gt; 6  1.2    1                Plumbing  33.8  61000</span></span>
+<span id="cb5-19"><a href="#cb5-19" tabindex="-1"></a><span class="co">#&gt; 7  2.1    2                Excavate  18.2  37000</span></span>
+<span id="cb5-20"><a href="#cb5-20" tabindex="-1"></a><span class="co">#&gt; 8  2.2    2          Steel Erection   5.8   9000</span></span>
+<span id="cb5-21"><a href="#cb5-21" tabindex="-1"></a><span class="co">#&gt; 9  3.1    3            Masonry Work  16.2  62000</span></span>
+<span id="cb5-22"><a href="#cb5-22" tabindex="-1"></a><span class="co">#&gt; 10 3.2    3       Building Finishes  14.2  21500</span></span></code></pre></div>
 <p>In most cases, this approach suffices. The code is simple and clear,
 and performance is not typically an issue. (In other testing
 <code>rollup()</code> performs tens of thousands of non-trivial property
@@ -511,41 +509,42 @@ more esoteric applications.</p>
 </div>
 <div id="chaining-update-methods" class="section level2">
 <h2>Chaining Update Methods</h2>
-<p>A valid <em>update</em> method returns the updated data set, so we
-can chain two updates within a single <code>rollup()</code> instead of
-chaining two <code>rollup()</code>s. Similarly, a data set validator
-returns a logical value, so we can make the conjunction of two
-validators:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="fu">rollup</span>(</span>
-<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>  <span class="at">tree =</span> wbs_tree,</span>
-<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a>  <span class="at">ds =</span> wbs_table,</span>
-<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a>  <span class="at">update =</span> <span class="cf">function</span>(d, t, s) {</span>
-<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a>    <span class="fu">update_df_prop_by_id</span>(</span>
-<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a>      <span class="at">df =</span> d,</span>
-<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a>      <span class="at">target =</span> t,</span>
-<span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a>      <span class="at">sources =</span> s,</span>
-<span id="cb7-9"><a href="#cb7-9" tabindex="-1"></a>      <span class="at">prop =</span> <span class="st">&quot;work&quot;</span></span>
-<span id="cb7-10"><a href="#cb7-10" tabindex="-1"></a>    ) <span class="sc">|&gt;</span></span>
-<span id="cb7-11"><a href="#cb7-11" tabindex="-1"></a>      <span class="fu">update_df_prop_by_id</span>(<span class="at">target =</span> t,</span>
-<span id="cb7-12"><a href="#cb7-12" tabindex="-1"></a>                           <span class="at">sources =</span> s,</span>
-<span id="cb7-13"><a href="#cb7-13" tabindex="-1"></a>                           <span class="at">prop =</span> <span class="st">&quot;budget&quot;</span>)</span>
-<span id="cb7-14"><a href="#cb7-14" tabindex="-1"></a>  },</span>
-<span id="cb7-15"><a href="#cb7-15" tabindex="-1"></a>  <span class="at">validate_ds =</span> <span class="cf">function</span>(t, d) {</span>
-<span id="cb7-16"><a href="#cb7-16" tabindex="-1"></a>    <span class="fu">validate_df_by_id</span>(<span class="at">tree =</span> t, <span class="at">df =</span> d, <span class="at">prop =</span> <span class="st">&quot;work&quot;</span>) <span class="sc">&amp;&amp;</span></span>
-<span id="cb7-17"><a href="#cb7-17" tabindex="-1"></a>      <span class="fu">validate_df_by_id</span>(<span class="at">tree =</span> t, <span class="at">df =</span> d, <span class="at">prop =</span> <span class="st">&quot;budget&quot;</span>)</span>
-<span id="cb7-18"><a href="#cb7-18" tabindex="-1"></a>  }</span>
-<span id="cb7-19"><a href="#cb7-19" tabindex="-1"></a>)</span>
-<span id="cb7-20"><a href="#cb7-20" tabindex="-1"></a><span class="co">#&gt;     id  pid                    name  work budget</span></span>
-<span id="cb7-21"><a href="#cb7-21" tabindex="-1"></a><span class="co">#&gt; 1  top &lt;NA&gt; Construction of a House 100.0 215500</span></span>
-<span id="cb7-22"><a href="#cb7-22" tabindex="-1"></a><span class="co">#&gt; 2    1  top                Internal  45.6  86000</span></span>
-<span id="cb7-23"><a href="#cb7-23" tabindex="-1"></a><span class="co">#&gt; 3    2  top              Foundation  24.0  46000</span></span>
-<span id="cb7-24"><a href="#cb7-24" tabindex="-1"></a><span class="co">#&gt; 4    3  top                External  30.4  83500</span></span>
-<span id="cb7-25"><a href="#cb7-25" tabindex="-1"></a><span class="co">#&gt; 5  1.1    1              Electrical  11.8  25000</span></span>
-<span id="cb7-26"><a href="#cb7-26" tabindex="-1"></a><span class="co">#&gt; 6  1.2    1                Plumbing  33.8  61000</span></span>
-<span id="cb7-27"><a href="#cb7-27" tabindex="-1"></a><span class="co">#&gt; 7  2.1    2                Excavate  18.2  37000</span></span>
-<span id="cb7-28"><a href="#cb7-28" tabindex="-1"></a><span class="co">#&gt; 8  2.2    2          Steel Erection   5.8   9000</span></span>
-<span id="cb7-29"><a href="#cb7-29" tabindex="-1"></a><span class="co">#&gt; 9  3.1    3            Masonry Work  16.2  62000</span></span>
-<span id="cb7-30"><a href="#cb7-30" tabindex="-1"></a><span class="co">#&gt; 10 3.2    3       Building Finishes  14.2  21500</span></span></code></pre></div>
+<p><code>update_df_prop_by_id()</code> (like every well-behaved
+<em>update</em> method) modifies only the specified column and leaves
+the rest of the data frame unchanged, so we can chain two updates within
+a single <code>rollup()</code> instead of chaining two
+<code>rollup()</code>s. Similarly, a data set validator returns a
+logical value, so we can make the conjunction of two validators:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="fu">rollup</span>(</span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>  <span class="at">tree =</span> wbs_tree,</span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>  <span class="at">ds =</span> wbs_table,</span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a>  <span class="at">update =</span> <span class="cf">function</span>(d, t, s) {</span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a>    <span class="fu">update_df_prop_by_id</span>(</span>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a>      <span class="at">df =</span> d,</span>
+<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a>      <span class="at">target =</span> t,</span>
+<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a>      <span class="at">sources =</span> s,</span>
+<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a>      <span class="at">prop =</span> <span class="st">&quot;work&quot;</span></span>
+<span id="cb6-10"><a href="#cb6-10" tabindex="-1"></a>    ) <span class="sc">|&gt;</span></span>
+<span id="cb6-11"><a href="#cb6-11" tabindex="-1"></a>      <span class="fu">update_df_prop_by_id</span>(<span class="at">target =</span> t,</span>
+<span id="cb6-12"><a href="#cb6-12" tabindex="-1"></a>                           <span class="at">sources =</span> s,</span>
+<span id="cb6-13"><a href="#cb6-13" tabindex="-1"></a>                           <span class="at">prop =</span> <span class="st">&quot;budget&quot;</span>)</span>
+<span id="cb6-14"><a href="#cb6-14" tabindex="-1"></a>  },</span>
+<span id="cb6-15"><a href="#cb6-15" tabindex="-1"></a>  <span class="at">validate_ds =</span> <span class="cf">function</span>(t, d) {</span>
+<span id="cb6-16"><a href="#cb6-16" tabindex="-1"></a>    <span class="fu">validate_df_by_id</span>(<span class="at">tree =</span> t, <span class="at">df =</span> d, <span class="at">prop =</span> <span class="st">&quot;work&quot;</span>) <span class="sc">&amp;&amp;</span></span>
+<span id="cb6-17"><a href="#cb6-17" tabindex="-1"></a>      <span class="fu">validate_df_by_id</span>(<span class="at">tree =</span> t, <span class="at">df =</span> d, <span class="at">prop =</span> <span class="st">&quot;budget&quot;</span>)</span>
+<span id="cb6-18"><a href="#cb6-18" tabindex="-1"></a>  }</span>
+<span id="cb6-19"><a href="#cb6-19" tabindex="-1"></a>)</span>
+<span id="cb6-20"><a href="#cb6-20" tabindex="-1"></a><span class="co">#&gt;     id  pid                    name  work budget</span></span>
+<span id="cb6-21"><a href="#cb6-21" tabindex="-1"></a><span class="co">#&gt; 1  top &lt;NA&gt; Construction of a House 100.0 215500</span></span>
+<span id="cb6-22"><a href="#cb6-22" tabindex="-1"></a><span class="co">#&gt; 2    1  top                Internal  45.6  86000</span></span>
+<span id="cb6-23"><a href="#cb6-23" tabindex="-1"></a><span class="co">#&gt; 3    2  top              Foundation  24.0  46000</span></span>
+<span id="cb6-24"><a href="#cb6-24" tabindex="-1"></a><span class="co">#&gt; 4    3  top                External  30.4  83500</span></span>
+<span id="cb6-25"><a href="#cb6-25" tabindex="-1"></a><span class="co">#&gt; 5  1.1    1              Electrical  11.8  25000</span></span>
+<span id="cb6-26"><a href="#cb6-26" tabindex="-1"></a><span class="co">#&gt; 6  1.2    1                Plumbing  33.8  61000</span></span>
+<span id="cb6-27"><a href="#cb6-27" tabindex="-1"></a><span class="co">#&gt; 7  2.1    2                Excavate  18.2  37000</span></span>
+<span id="cb6-28"><a href="#cb6-28" tabindex="-1"></a><span class="co">#&gt; 8  2.2    2          Steel Erection   5.8   9000</span></span>
+<span id="cb6-29"><a href="#cb6-29" tabindex="-1"></a><span class="co">#&gt; 9  3.1    3            Masonry Work  16.2  62000</span></span>
+<span id="cb6-30"><a href="#cb6-30" tabindex="-1"></a><span class="co">#&gt; 10 3.2    3       Building Finishes  14.2  21500</span></span></code></pre></div>
 </div>
 <div id="custom-get-set-and-update-methods" class="section level2">
 <h2>Custom <em>get</em>, <em>set</em>, and <em>update</em> Methods</h2>
@@ -557,224 +556,224 @@ named vector from the specified properties (using lower-level function
 <em>combine</em> method still works because R knows how to add vectors.)
 Finally, we create a custom data set validator and invoke
 <code>rollup()</code> with our custom methods.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>my_get <span class="ot">&lt;-</span> <span class="cf">function</span>(d, i) <span class="fu">c</span>(</span>
-<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>  <span class="at">w=</span><span class="fu">df_get_by_id</span>(<span class="at">df=</span>d, <span class="at">id=</span>i, <span class="at">prop=</span><span class="st">&quot;work&quot;</span>),</span>
-<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a>  <span class="at">b=</span><span class="fu">df_get_by_id</span>(<span class="at">df=</span>d, <span class="at">id=</span>i, <span class="at">prop=</span><span class="st">&quot;budget&quot;</span>)</span>
-<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a>)</span>
-<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a>my_set <span class="ot">&lt;-</span> <span class="cf">function</span>(d, i, v) {</span>
-<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a>  <span class="fu">df_set_by_id</span>(<span class="at">df=</span>d, <span class="at">id=</span>i, <span class="at">prop=</span><span class="st">&quot;work&quot;</span>, <span class="at">val=</span>v[<span class="st">&quot;w&quot;</span>]) <span class="sc">|&gt;</span></span>
-<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a>    <span class="fu">df_set_by_id</span>(<span class="at">id=</span>i, <span class="at">prop=</span><span class="st">&quot;budget&quot;</span>, <span class="at">val=</span>v[<span class="st">&quot;b&quot;</span>])</span>
-<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a>}</span>
-<span id="cb8-9"><a href="#cb8-9" tabindex="-1"></a>my_update <span class="ot">&lt;-</span> <span class="cf">function</span>(d, t, s) {</span>
-<span id="cb8-10"><a href="#cb8-10" tabindex="-1"></a>    <span class="fu">update_prop</span>(<span class="at">ds=</span>d, <span class="at">target=</span>t, <span class="at">sources=</span>s, <span class="at">set=</span>my_set, <span class="at">get=</span>my_get)</span>
-<span id="cb8-11"><a href="#cb8-11" tabindex="-1"></a>}</span>
-<span id="cb8-12"><a href="#cb8-12" tabindex="-1"></a>my_validate <span class="ot">&lt;-</span> <span class="cf">function</span>(t, d) {</span>
-<span id="cb8-13"><a href="#cb8-13" tabindex="-1"></a>  <span class="fu">validate_ds</span>(<span class="at">tree=</span>t, <span class="at">ds=</span>d,</span>
-<span id="cb8-14"><a href="#cb8-14" tabindex="-1"></a>               <span class="at">get_keys=</span><span class="cf">function</span>(d) <span class="fu">df_get_ids</span>(<span class="at">df=</span>d),</span>
-<span id="cb8-15"><a href="#cb8-15" tabindex="-1"></a>               <span class="at">get_prop=</span>my_get,</span>
-<span id="cb8-16"><a href="#cb8-16" tabindex="-1"></a>               <span class="at">op=</span><span class="cf">function</span>(v) <span class="fu">my_check</span>(v[<span class="st">&quot;w&quot;</span>]) <span class="sc">&amp;&amp;</span> <span class="fu">my_check</span>(v[<span class="st">&quot;b&quot;</span>])</span>
-<span id="cb8-17"><a href="#cb8-17" tabindex="-1"></a>  )</span>
-<span id="cb8-18"><a href="#cb8-18" tabindex="-1"></a>}</span>
-<span id="cb8-19"><a href="#cb8-19" tabindex="-1"></a>my_check <span class="ot">&lt;-</span> <span class="cf">function</span>(v)</span>
-<span id="cb8-20"><a href="#cb8-20" tabindex="-1"></a>  <span class="fu">is.numeric</span>(v) <span class="sc">&amp;&amp;</span> <span class="sc">!</span><span class="fu">is.na</span>(v) <span class="sc">&amp;&amp;</span> (v <span class="sc">&gt;</span> <span class="fl">0.0</span>)</span>
-<span id="cb8-21"><a href="#cb8-21" tabindex="-1"></a></span>
-<span id="cb8-22"><a href="#cb8-22" tabindex="-1"></a><span class="fu">rollup</span>(</span>
-<span id="cb8-23"><a href="#cb8-23" tabindex="-1"></a>  <span class="at">tree =</span> wbs_tree,</span>
-<span id="cb8-24"><a href="#cb8-24" tabindex="-1"></a>  <span class="at">ds =</span> wbs_table,</span>
-<span id="cb8-25"><a href="#cb8-25" tabindex="-1"></a>  <span class="at">update =</span> my_update,</span>
-<span id="cb8-26"><a href="#cb8-26" tabindex="-1"></a>  <span class="at">validate_ds =</span> my_validate</span>
-<span id="cb8-27"><a href="#cb8-27" tabindex="-1"></a>)</span>
-<span id="cb8-28"><a href="#cb8-28" tabindex="-1"></a><span class="co">#&gt;     id  pid                    name  work budget</span></span>
-<span id="cb8-29"><a href="#cb8-29" tabindex="-1"></a><span class="co">#&gt; 1  top &lt;NA&gt; Construction of a House 100.0 215500</span></span>
-<span id="cb8-30"><a href="#cb8-30" tabindex="-1"></a><span class="co">#&gt; 2    1  top                Internal  45.6  86000</span></span>
-<span id="cb8-31"><a href="#cb8-31" tabindex="-1"></a><span class="co">#&gt; 3    2  top              Foundation  24.0  46000</span></span>
-<span id="cb8-32"><a href="#cb8-32" tabindex="-1"></a><span class="co">#&gt; 4    3  top                External  30.4  83500</span></span>
-<span id="cb8-33"><a href="#cb8-33" tabindex="-1"></a><span class="co">#&gt; 5  1.1    1              Electrical  11.8  25000</span></span>
-<span id="cb8-34"><a href="#cb8-34" tabindex="-1"></a><span class="co">#&gt; 6  1.2    1                Plumbing  33.8  61000</span></span>
-<span id="cb8-35"><a href="#cb8-35" tabindex="-1"></a><span class="co">#&gt; 7  2.1    2                Excavate  18.2  37000</span></span>
-<span id="cb8-36"><a href="#cb8-36" tabindex="-1"></a><span class="co">#&gt; 8  2.2    2          Steel Erection   5.8   9000</span></span>
-<span id="cb8-37"><a href="#cb8-37" tabindex="-1"></a><span class="co">#&gt; 9  3.1    3            Masonry Work  16.2  62000</span></span>
-<span id="cb8-38"><a href="#cb8-38" tabindex="-1"></a><span class="co">#&gt; 10 3.2    3       Building Finishes  14.2  21500</span></span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>my_get <span class="ot">&lt;-</span> <span class="cf">function</span>(d, i) <span class="fu">c</span>(</span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>  <span class="at">w=</span><span class="fu">df_get_by_id</span>(<span class="at">df=</span>d, <span class="at">id=</span>i, <span class="at">prop=</span><span class="st">&quot;work&quot;</span>),</span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a>  <span class="at">b=</span><span class="fu">df_get_by_id</span>(<span class="at">df=</span>d, <span class="at">id=</span>i, <span class="at">prop=</span><span class="st">&quot;budget&quot;</span>)</span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a>)</span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a>my_set <span class="ot">&lt;-</span> <span class="cf">function</span>(d, i, v) {</span>
+<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a>  <span class="fu">df_set_by_id</span>(<span class="at">df=</span>d, <span class="at">id=</span>i, <span class="at">prop=</span><span class="st">&quot;work&quot;</span>, <span class="at">val=</span>v[<span class="st">&quot;w&quot;</span>]) <span class="sc">|&gt;</span></span>
+<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a>    <span class="fu">df_set_by_id</span>(<span class="at">id=</span>i, <span class="at">prop=</span><span class="st">&quot;budget&quot;</span>, <span class="at">val=</span>v[<span class="st">&quot;b&quot;</span>])</span>
+<span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a>}</span>
+<span id="cb7-9"><a href="#cb7-9" tabindex="-1"></a>my_update <span class="ot">&lt;-</span> <span class="cf">function</span>(d, t, s) {</span>
+<span id="cb7-10"><a href="#cb7-10" tabindex="-1"></a>    <span class="fu">update_prop</span>(<span class="at">ds=</span>d, <span class="at">target=</span>t, <span class="at">sources=</span>s, <span class="at">set=</span>my_set, <span class="at">get=</span>my_get)</span>
+<span id="cb7-11"><a href="#cb7-11" tabindex="-1"></a>}</span>
+<span id="cb7-12"><a href="#cb7-12" tabindex="-1"></a>my_validate <span class="ot">&lt;-</span> <span class="cf">function</span>(t, d) {</span>
+<span id="cb7-13"><a href="#cb7-13" tabindex="-1"></a>  <span class="fu">validate_ds</span>(<span class="at">tree=</span>t, <span class="at">ds=</span>d,</span>
+<span id="cb7-14"><a href="#cb7-14" tabindex="-1"></a>               <span class="at">get_keys=</span><span class="cf">function</span>(d) <span class="fu">df_get_ids</span>(<span class="at">df=</span>d),</span>
+<span id="cb7-15"><a href="#cb7-15" tabindex="-1"></a>               <span class="at">get_prop=</span>my_get,</span>
+<span id="cb7-16"><a href="#cb7-16" tabindex="-1"></a>               <span class="at">op=</span><span class="cf">function</span>(v) <span class="fu">my_check</span>(v[<span class="st">&quot;w&quot;</span>]) <span class="sc">&amp;&amp;</span> <span class="fu">my_check</span>(v[<span class="st">&quot;b&quot;</span>])</span>
+<span id="cb7-17"><a href="#cb7-17" tabindex="-1"></a>  )</span>
+<span id="cb7-18"><a href="#cb7-18" tabindex="-1"></a>}</span>
+<span id="cb7-19"><a href="#cb7-19" tabindex="-1"></a>my_check <span class="ot">&lt;-</span> <span class="cf">function</span>(v)</span>
+<span id="cb7-20"><a href="#cb7-20" tabindex="-1"></a>  <span class="fu">is.numeric</span>(v) <span class="sc">&amp;&amp;</span> <span class="sc">!</span><span class="fu">is.na</span>(v) <span class="sc">&amp;&amp;</span> (v <span class="sc">&gt;</span> <span class="fl">0.0</span>)</span>
+<span id="cb7-21"><a href="#cb7-21" tabindex="-1"></a></span>
+<span id="cb7-22"><a href="#cb7-22" tabindex="-1"></a><span class="fu">rollup</span>(</span>
+<span id="cb7-23"><a href="#cb7-23" tabindex="-1"></a>  <span class="at">tree =</span> wbs_tree,</span>
+<span id="cb7-24"><a href="#cb7-24" tabindex="-1"></a>  <span class="at">ds =</span> wbs_table,</span>
+<span id="cb7-25"><a href="#cb7-25" tabindex="-1"></a>  <span class="at">update =</span> my_update,</span>
+<span id="cb7-26"><a href="#cb7-26" tabindex="-1"></a>  <span class="at">validate_ds =</span> my_validate</span>
+<span id="cb7-27"><a href="#cb7-27" tabindex="-1"></a>)</span>
+<span id="cb7-28"><a href="#cb7-28" tabindex="-1"></a><span class="co">#&gt;     id  pid                    name  work budget</span></span>
+<span id="cb7-29"><a href="#cb7-29" tabindex="-1"></a><span class="co">#&gt; 1  top &lt;NA&gt; Construction of a House 100.0 215500</span></span>
+<span id="cb7-30"><a href="#cb7-30" tabindex="-1"></a><span class="co">#&gt; 2    1  top                Internal  45.6  86000</span></span>
+<span id="cb7-31"><a href="#cb7-31" tabindex="-1"></a><span class="co">#&gt; 3    2  top              Foundation  24.0  46000</span></span>
+<span id="cb7-32"><a href="#cb7-32" tabindex="-1"></a><span class="co">#&gt; 4    3  top                External  30.4  83500</span></span>
+<span id="cb7-33"><a href="#cb7-33" tabindex="-1"></a><span class="co">#&gt; 5  1.1    1              Electrical  11.8  25000</span></span>
+<span id="cb7-34"><a href="#cb7-34" tabindex="-1"></a><span class="co">#&gt; 6  1.2    1                Plumbing  33.8  61000</span></span>
+<span id="cb7-35"><a href="#cb7-35" tabindex="-1"></a><span class="co">#&gt; 7  2.1    2                Excavate  18.2  37000</span></span>
+<span id="cb7-36"><a href="#cb7-36" tabindex="-1"></a><span class="co">#&gt; 8  2.2    2          Steel Erection   5.8   9000</span></span>
+<span id="cb7-37"><a href="#cb7-37" tabindex="-1"></a><span class="co">#&gt; 9  3.1    3            Masonry Work  16.2  62000</span></span>
+<span id="cb7-38"><a href="#cb7-38" tabindex="-1"></a><span class="co">#&gt; 10 3.2    3       Building Finishes  14.2  21500</span></span></code></pre></div>
 </div>
 <div id="custom-combine-method" class="section level2">
 <h2>Custom <em>combine</em> Method</h2>
 <p>Finally, we illustrate the use of a custom combiner. Suppose we have
 5% uncertainty in our leaf cost numbers. Add those uncertainty numbers
 to our data frame:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a>new_wbs_table <span class="ot">&lt;-</span> wbs_table</span>
-<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a>new_wbs_table<span class="sc">$</span>work <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
-<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a>new_wbs_table<span class="sc">$</span>budget_unc <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(wbs_table<span class="sc">$</span>budget), <span class="cn">NA</span>, wbs_table<span class="sc">$</span>budget <span class="sc">*</span> <span class="fl">0.05</span>)</span>
-<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a>new_wbs_table</span>
-<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a><span class="co">#&gt;     id  pid                    name budget budget_unc</span></span>
-<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a><span class="co">#&gt; 1  top &lt;NA&gt; Construction of a House     NA         NA</span></span>
-<span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a><span class="co">#&gt; 2    1  top                Internal     NA         NA</span></span>
-<span id="cb9-8"><a href="#cb9-8" tabindex="-1"></a><span class="co">#&gt; 3    2  top              Foundation     NA         NA</span></span>
-<span id="cb9-9"><a href="#cb9-9" tabindex="-1"></a><span class="co">#&gt; 4    3  top                External     NA         NA</span></span>
-<span id="cb9-10"><a href="#cb9-10" tabindex="-1"></a><span class="co">#&gt; 5  1.1    1              Electrical  25000       1250</span></span>
-<span id="cb9-11"><a href="#cb9-11" tabindex="-1"></a><span class="co">#&gt; 6  1.2    1                Plumbing  61000       3050</span></span>
-<span id="cb9-12"><a href="#cb9-12" tabindex="-1"></a><span class="co">#&gt; 7  2.1    2                Excavate  37000       1850</span></span>
-<span id="cb9-13"><a href="#cb9-13" tabindex="-1"></a><span class="co">#&gt; 8  2.2    2          Steel Erection   9000        450</span></span>
-<span id="cb9-14"><a href="#cb9-14" tabindex="-1"></a><span class="co">#&gt; 9  3.1    3            Masonry Work  62000       3100</span></span>
-<span id="cb9-15"><a href="#cb9-15" tabindex="-1"></a><span class="co">#&gt; 10 3.2    3       Building Finishes  21500       1075</span></span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>new_wbs_table <span class="ot">&lt;-</span> wbs_table</span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>new_wbs_table<span class="sc">$</span>work <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a>new_wbs_table<span class="sc">$</span>budget_unc <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(wbs_table<span class="sc">$</span>budget), <span class="cn">NA</span>, wbs_table<span class="sc">$</span>budget <span class="sc">*</span> <span class="fl">0.05</span>)</span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a>new_wbs_table</span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a><span class="co">#&gt;     id  pid                    name budget budget_unc</span></span>
+<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a><span class="co">#&gt; 1  top &lt;NA&gt; Construction of a House     NA         NA</span></span>
+<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a><span class="co">#&gt; 2    1  top                Internal     NA         NA</span></span>
+<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a><span class="co">#&gt; 3    2  top              Foundation     NA         NA</span></span>
+<span id="cb8-9"><a href="#cb8-9" tabindex="-1"></a><span class="co">#&gt; 4    3  top                External     NA         NA</span></span>
+<span id="cb8-10"><a href="#cb8-10" tabindex="-1"></a><span class="co">#&gt; 5  1.1    1              Electrical  25000       1250</span></span>
+<span id="cb8-11"><a href="#cb8-11" tabindex="-1"></a><span class="co">#&gt; 6  1.2    1                Plumbing  61000       3050</span></span>
+<span id="cb8-12"><a href="#cb8-12" tabindex="-1"></a><span class="co">#&gt; 7  2.1    2                Excavate  37000       1850</span></span>
+<span id="cb8-13"><a href="#cb8-13" tabindex="-1"></a><span class="co">#&gt; 8  2.2    2          Steel Erection   9000        450</span></span>
+<span id="cb8-14"><a href="#cb8-14" tabindex="-1"></a><span class="co">#&gt; 9  3.1    3            Masonry Work  62000       3100</span></span>
+<span id="cb8-15"><a href="#cb8-15" tabindex="-1"></a><span class="co">#&gt; 10 3.2    3       Building Finishes  21500       1075</span></span></code></pre></div>
 <p>The standard technique for accumulating uncertainties is to combine
 using root-sum-square (RSS).</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a>combine_rss <span class="ot">&lt;-</span> <span class="cf">function</span>(vl) {</span>
-<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a>  <span class="fu">sqrt</span>(<span class="fu">Reduce</span>(<span class="at">f =</span> <span class="st">`</span><span class="at">+</span><span class="st">`</span>, <span class="at">x =</span> <span class="fu">Map</span>(</span>
-<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a>    <span class="at">f =</span> <span class="cf">function</span>(v)</span>
-<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a>      v <span class="sc">*</span> v,</span>
-<span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a>    vl</span>
-<span id="cb10-6"><a href="#cb10-6" tabindex="-1"></a>  )))</span>
-<span id="cb10-7"><a href="#cb10-7" tabindex="-1"></a>}</span>
-<span id="cb10-8"><a href="#cb10-8" tabindex="-1"></a>result <span class="ot">&lt;-</span> <span class="fu">rollup</span>(</span>
-<span id="cb10-9"><a href="#cb10-9" tabindex="-1"></a>  <span class="at">tree =</span> wbs_tree,</span>
-<span id="cb10-10"><a href="#cb10-10" tabindex="-1"></a>  <span class="at">ds =</span> new_wbs_table,</span>
-<span id="cb10-11"><a href="#cb10-11" tabindex="-1"></a>  <span class="at">update =</span> <span class="cf">function</span>(d, t, s)</span>
-<span id="cb10-12"><a href="#cb10-12" tabindex="-1"></a>    <span class="fu">update_df_prop_by_id</span>(</span>
-<span id="cb10-13"><a href="#cb10-13" tabindex="-1"></a>      <span class="at">df =</span> d,</span>
-<span id="cb10-14"><a href="#cb10-14" tabindex="-1"></a>      <span class="at">target =</span> t,</span>
-<span id="cb10-15"><a href="#cb10-15" tabindex="-1"></a>      <span class="at">sources =</span> s,</span>
-<span id="cb10-16"><a href="#cb10-16" tabindex="-1"></a>      <span class="at">prop =</span> <span class="st">&quot;budget&quot;</span></span>
-<span id="cb10-17"><a href="#cb10-17" tabindex="-1"></a>    ) <span class="sc">|&gt;</span></span>
-<span id="cb10-18"><a href="#cb10-18" tabindex="-1"></a>    <span class="fu">update_df_prop_by_id</span>(</span>
-<span id="cb10-19"><a href="#cb10-19" tabindex="-1"></a>      <span class="at">target =</span> t,</span>
-<span id="cb10-20"><a href="#cb10-20" tabindex="-1"></a>      <span class="at">sources =</span> s,</span>
-<span id="cb10-21"><a href="#cb10-21" tabindex="-1"></a>      <span class="at">prop =</span> <span class="st">&quot;budget_unc&quot;</span>,</span>
-<span id="cb10-22"><a href="#cb10-22" tabindex="-1"></a>      <span class="at">combine =</span> combine_rss</span>
-<span id="cb10-23"><a href="#cb10-23" tabindex="-1"></a>    ),</span>
-<span id="cb10-24"><a href="#cb10-24" tabindex="-1"></a>  <span class="at">validate_ds =</span> <span class="cf">function</span>(t, d)</span>
-<span id="cb10-25"><a href="#cb10-25" tabindex="-1"></a>    <span class="fu">validate_df_by_id</span>(<span class="at">tree =</span> t, <span class="at">df =</span> d, <span class="at">prop =</span> <span class="st">&quot;budget_unc&quot;</span>),</span>
-<span id="cb10-26"><a href="#cb10-26" tabindex="-1"></a>)</span>
-<span id="cb10-27"><a href="#cb10-27" tabindex="-1"></a>result<span class="sc">$</span>budget_unc_pct <span class="ot">&lt;-</span> result<span class="sc">$</span>budget_unc <span class="sc">/</span> result<span class="sc">$</span>budget <span class="sc">*</span> <span class="fl">100.</span></span>
-<span id="cb10-28"><a href="#cb10-28" tabindex="-1"></a>result</span>
-<span id="cb10-29"><a href="#cb10-29" tabindex="-1"></a><span class="co">#&gt;     id  pid                    name budget budget_unc budget_unc_pct</span></span>
-<span id="cb10-30"><a href="#cb10-30" tabindex="-1"></a><span class="co">#&gt; 1  top &lt;NA&gt; Construction of a House 215500   5025.497       2.332017</span></span>
-<span id="cb10-31"><a href="#cb10-31" tabindex="-1"></a><span class="co">#&gt; 2    1  top                Internal  86000   3296.210       3.832802</span></span>
-<span id="cb10-32"><a href="#cb10-32" tabindex="-1"></a><span class="co">#&gt; 3    2  top              Foundation  46000   1903.943       4.139007</span></span>
-<span id="cb10-33"><a href="#cb10-33" tabindex="-1"></a><span class="co">#&gt; 4    3  top                External  83500   3281.101       3.929462</span></span>
-<span id="cb10-34"><a href="#cb10-34" tabindex="-1"></a><span class="co">#&gt; 5  1.1    1              Electrical  25000   1250.000       5.000000</span></span>
-<span id="cb10-35"><a href="#cb10-35" tabindex="-1"></a><span class="co">#&gt; 6  1.2    1                Plumbing  61000   3050.000       5.000000</span></span>
-<span id="cb10-36"><a href="#cb10-36" tabindex="-1"></a><span class="co">#&gt; 7  2.1    2                Excavate  37000   1850.000       5.000000</span></span>
-<span id="cb10-37"><a href="#cb10-37" tabindex="-1"></a><span class="co">#&gt; 8  2.2    2          Steel Erection   9000    450.000       5.000000</span></span>
-<span id="cb10-38"><a href="#cb10-38" tabindex="-1"></a><span class="co">#&gt; 9  3.1    3            Masonry Work  62000   3100.000       5.000000</span></span>
-<span id="cb10-39"><a href="#cb10-39" tabindex="-1"></a><span class="co">#&gt; 10 3.2    3       Building Finishes  21500   1075.000       5.000000</span></span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a>combine_rss <span class="ot">&lt;-</span> <span class="cf">function</span>(vl) {</span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a>  <span class="fu">sqrt</span>(<span class="fu">Reduce</span>(<span class="at">f =</span> <span class="st">`</span><span class="at">+</span><span class="st">`</span>, <span class="at">x =</span> <span class="fu">Map</span>(</span>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a>    <span class="at">f =</span> <span class="cf">function</span>(v)</span>
+<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a>      v <span class="sc">*</span> v,</span>
+<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a>    vl</span>
+<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a>  )))</span>
+<span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a>}</span>
+<span id="cb9-8"><a href="#cb9-8" tabindex="-1"></a>result <span class="ot">&lt;-</span> <span class="fu">rollup</span>(</span>
+<span id="cb9-9"><a href="#cb9-9" tabindex="-1"></a>  <span class="at">tree =</span> wbs_tree,</span>
+<span id="cb9-10"><a href="#cb9-10" tabindex="-1"></a>  <span class="at">ds =</span> new_wbs_table,</span>
+<span id="cb9-11"><a href="#cb9-11" tabindex="-1"></a>  <span class="at">update =</span> <span class="cf">function</span>(d, t, s)</span>
+<span id="cb9-12"><a href="#cb9-12" tabindex="-1"></a>    <span class="fu">update_df_prop_by_id</span>(</span>
+<span id="cb9-13"><a href="#cb9-13" tabindex="-1"></a>      <span class="at">df =</span> d,</span>
+<span id="cb9-14"><a href="#cb9-14" tabindex="-1"></a>      <span class="at">target =</span> t,</span>
+<span id="cb9-15"><a href="#cb9-15" tabindex="-1"></a>      <span class="at">sources =</span> s,</span>
+<span id="cb9-16"><a href="#cb9-16" tabindex="-1"></a>      <span class="at">prop =</span> <span class="st">&quot;budget&quot;</span></span>
+<span id="cb9-17"><a href="#cb9-17" tabindex="-1"></a>    ) <span class="sc">|&gt;</span></span>
+<span id="cb9-18"><a href="#cb9-18" tabindex="-1"></a>    <span class="fu">update_df_prop_by_id</span>(</span>
+<span id="cb9-19"><a href="#cb9-19" tabindex="-1"></a>      <span class="at">target =</span> t,</span>
+<span id="cb9-20"><a href="#cb9-20" tabindex="-1"></a>      <span class="at">sources =</span> s,</span>
+<span id="cb9-21"><a href="#cb9-21" tabindex="-1"></a>      <span class="at">prop =</span> <span class="st">&quot;budget_unc&quot;</span>,</span>
+<span id="cb9-22"><a href="#cb9-22" tabindex="-1"></a>      <span class="at">combine =</span> combine_rss</span>
+<span id="cb9-23"><a href="#cb9-23" tabindex="-1"></a>    ),</span>
+<span id="cb9-24"><a href="#cb9-24" tabindex="-1"></a>  <span class="at">validate_ds =</span> <span class="cf">function</span>(t, d)</span>
+<span id="cb9-25"><a href="#cb9-25" tabindex="-1"></a>    <span class="fu">validate_df_by_id</span>(<span class="at">tree =</span> t, <span class="at">df =</span> d, <span class="at">prop =</span> <span class="st">&quot;budget_unc&quot;</span>),</span>
+<span id="cb9-26"><a href="#cb9-26" tabindex="-1"></a>)</span>
+<span id="cb9-27"><a href="#cb9-27" tabindex="-1"></a>result<span class="sc">$</span>budget_unc_pct <span class="ot">&lt;-</span> result<span class="sc">$</span>budget_unc <span class="sc">/</span> result<span class="sc">$</span>budget <span class="sc">*</span> <span class="fl">100.</span></span>
+<span id="cb9-28"><a href="#cb9-28" tabindex="-1"></a>result</span>
+<span id="cb9-29"><a href="#cb9-29" tabindex="-1"></a><span class="co">#&gt;     id  pid                    name budget budget_unc budget_unc_pct</span></span>
+<span id="cb9-30"><a href="#cb9-30" tabindex="-1"></a><span class="co">#&gt; 1  top &lt;NA&gt; Construction of a House 215500   5025.497       2.332017</span></span>
+<span id="cb9-31"><a href="#cb9-31" tabindex="-1"></a><span class="co">#&gt; 2    1  top                Internal  86000   3296.210       3.832802</span></span>
+<span id="cb9-32"><a href="#cb9-32" tabindex="-1"></a><span class="co">#&gt; 3    2  top              Foundation  46000   1903.943       4.139007</span></span>
+<span id="cb9-33"><a href="#cb9-33" tabindex="-1"></a><span class="co">#&gt; 4    3  top                External  83500   3281.101       3.929462</span></span>
+<span id="cb9-34"><a href="#cb9-34" tabindex="-1"></a><span class="co">#&gt; 5  1.1    1              Electrical  25000   1250.000       5.000000</span></span>
+<span id="cb9-35"><a href="#cb9-35" tabindex="-1"></a><span class="co">#&gt; 6  1.2    1                Plumbing  61000   3050.000       5.000000</span></span>
+<span id="cb9-36"><a href="#cb9-36" tabindex="-1"></a><span class="co">#&gt; 7  2.1    2                Excavate  37000   1850.000       5.000000</span></span>
+<span id="cb9-37"><a href="#cb9-37" tabindex="-1"></a><span class="co">#&gt; 8  2.2    2          Steel Erection   9000    450.000       5.000000</span></span>
+<span id="cb9-38"><a href="#cb9-38" tabindex="-1"></a><span class="co">#&gt; 9  3.1    3            Masonry Work  62000   3100.000       5.000000</span></span>
+<span id="cb9-39"><a href="#cb9-39" tabindex="-1"></a><span class="co">#&gt; 10 3.2    3       Building Finishes  21500   1075.000       5.000000</span></span></code></pre></div>
 </div>
 </div>
 <div id="example-with-a-list" class="section level1">
 <h1>Example With A List</h1>
 <p>Suppose instead of a data frame we have a list of lists:</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a>wbs_list <span class="ot">&lt;-</span> <span class="fu">lapply</span>(<span class="fu">split</span>(wbs_table, wbs_table<span class="sc">$</span>id),</span>
-<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a>                   <span class="cf">function</span>(r) <span class="fu">list</span>(<span class="at">name =</span> r<span class="sc">$</span>name, <span class="at">budget =</span> r<span class="sc">$</span>budget)</span>
-<span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a>)</span>
-<span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a><span class="fu">str</span>(wbs_list)</span>
-<span id="cb11-5"><a href="#cb11-5" tabindex="-1"></a><span class="co">#&gt; List of 10</span></span>
-<span id="cb11-6"><a href="#cb11-6" tabindex="-1"></a><span class="co">#&gt;  $ 1  :List of 2</span></span>
-<span id="cb11-7"><a href="#cb11-7" tabindex="-1"></a><span class="co">#&gt;   ..$ name  : chr &quot;Internal&quot;</span></span>
-<span id="cb11-8"><a href="#cb11-8" tabindex="-1"></a><span class="co">#&gt;   ..$ budget: num NA</span></span>
-<span id="cb11-9"><a href="#cb11-9" tabindex="-1"></a><span class="co">#&gt;  $ 1.1:List of 2</span></span>
-<span id="cb11-10"><a href="#cb11-10" tabindex="-1"></a><span class="co">#&gt;   ..$ name  : chr &quot;Electrical&quot;</span></span>
-<span id="cb11-11"><a href="#cb11-11" tabindex="-1"></a><span class="co">#&gt;   ..$ budget: num 25000</span></span>
-<span id="cb11-12"><a href="#cb11-12" tabindex="-1"></a><span class="co">#&gt;  $ 1.2:List of 2</span></span>
-<span id="cb11-13"><a href="#cb11-13" tabindex="-1"></a><span class="co">#&gt;   ..$ name  : chr &quot;Plumbing&quot;</span></span>
-<span id="cb11-14"><a href="#cb11-14" tabindex="-1"></a><span class="co">#&gt;   ..$ budget: num 61000</span></span>
-<span id="cb11-15"><a href="#cb11-15" tabindex="-1"></a><span class="co">#&gt;  $ 2  :List of 2</span></span>
-<span id="cb11-16"><a href="#cb11-16" tabindex="-1"></a><span class="co">#&gt;   ..$ name  : chr &quot;Foundation&quot;</span></span>
-<span id="cb11-17"><a href="#cb11-17" tabindex="-1"></a><span class="co">#&gt;   ..$ budget: num NA</span></span>
-<span id="cb11-18"><a href="#cb11-18" tabindex="-1"></a><span class="co">#&gt;  $ 2.1:List of 2</span></span>
-<span id="cb11-19"><a href="#cb11-19" tabindex="-1"></a><span class="co">#&gt;   ..$ name  : chr &quot;Excavate&quot;</span></span>
-<span id="cb11-20"><a href="#cb11-20" tabindex="-1"></a><span class="co">#&gt;   ..$ budget: num 37000</span></span>
-<span id="cb11-21"><a href="#cb11-21" tabindex="-1"></a><span class="co">#&gt;  $ 2.2:List of 2</span></span>
-<span id="cb11-22"><a href="#cb11-22" tabindex="-1"></a><span class="co">#&gt;   ..$ name  : chr &quot;Steel Erection&quot;</span></span>
-<span id="cb11-23"><a href="#cb11-23" tabindex="-1"></a><span class="co">#&gt;   ..$ budget: num 9000</span></span>
-<span id="cb11-24"><a href="#cb11-24" tabindex="-1"></a><span class="co">#&gt;  $ 3  :List of 2</span></span>
-<span id="cb11-25"><a href="#cb11-25" tabindex="-1"></a><span class="co">#&gt;   ..$ name  : chr &quot;External&quot;</span></span>
-<span id="cb11-26"><a href="#cb11-26" tabindex="-1"></a><span class="co">#&gt;   ..$ budget: num NA</span></span>
-<span id="cb11-27"><a href="#cb11-27" tabindex="-1"></a><span class="co">#&gt;  $ 3.1:List of 2</span></span>
-<span id="cb11-28"><a href="#cb11-28" tabindex="-1"></a><span class="co">#&gt;   ..$ name  : chr &quot;Masonry Work&quot;</span></span>
-<span id="cb11-29"><a href="#cb11-29" tabindex="-1"></a><span class="co">#&gt;   ..$ budget: num 62000</span></span>
-<span id="cb11-30"><a href="#cb11-30" tabindex="-1"></a><span class="co">#&gt;  $ 3.2:List of 2</span></span>
-<span id="cb11-31"><a href="#cb11-31" tabindex="-1"></a><span class="co">#&gt;   ..$ name  : chr &quot;Building Finishes&quot;</span></span>
-<span id="cb11-32"><a href="#cb11-32" tabindex="-1"></a><span class="co">#&gt;   ..$ budget: num 21500</span></span>
-<span id="cb11-33"><a href="#cb11-33" tabindex="-1"></a><span class="co">#&gt;  $ top:List of 2</span></span>
-<span id="cb11-34"><a href="#cb11-34" tabindex="-1"></a><span class="co">#&gt;   ..$ name  : chr &quot;Construction of a House&quot;</span></span>
-<span id="cb11-35"><a href="#cb11-35" tabindex="-1"></a><span class="co">#&gt;   ..$ budget: num NA</span></span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a>wbs_list <span class="ot">&lt;-</span> <span class="fu">lapply</span>(<span class="fu">split</span>(wbs_table, wbs_table<span class="sc">$</span>id),</span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a>                   <span class="cf">function</span>(r) <span class="fu">list</span>(<span class="at">name =</span> r<span class="sc">$</span>name, <span class="at">budget =</span> r<span class="sc">$</span>budget)</span>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a>)</span>
+<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a><span class="fu">str</span>(wbs_list)</span>
+<span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a><span class="co">#&gt; List of 10</span></span>
+<span id="cb10-6"><a href="#cb10-6" tabindex="-1"></a><span class="co">#&gt;  $ 1  :List of 2</span></span>
+<span id="cb10-7"><a href="#cb10-7" tabindex="-1"></a><span class="co">#&gt;   ..$ name  : chr &quot;Internal&quot;</span></span>
+<span id="cb10-8"><a href="#cb10-8" tabindex="-1"></a><span class="co">#&gt;   ..$ budget: num NA</span></span>
+<span id="cb10-9"><a href="#cb10-9" tabindex="-1"></a><span class="co">#&gt;  $ 1.1:List of 2</span></span>
+<span id="cb10-10"><a href="#cb10-10" tabindex="-1"></a><span class="co">#&gt;   ..$ name  : chr &quot;Electrical&quot;</span></span>
+<span id="cb10-11"><a href="#cb10-11" tabindex="-1"></a><span class="co">#&gt;   ..$ budget: num 25000</span></span>
+<span id="cb10-12"><a href="#cb10-12" tabindex="-1"></a><span class="co">#&gt;  $ 1.2:List of 2</span></span>
+<span id="cb10-13"><a href="#cb10-13" tabindex="-1"></a><span class="co">#&gt;   ..$ name  : chr &quot;Plumbing&quot;</span></span>
+<span id="cb10-14"><a href="#cb10-14" tabindex="-1"></a><span class="co">#&gt;   ..$ budget: num 61000</span></span>
+<span id="cb10-15"><a href="#cb10-15" tabindex="-1"></a><span class="co">#&gt;  $ 2  :List of 2</span></span>
+<span id="cb10-16"><a href="#cb10-16" tabindex="-1"></a><span class="co">#&gt;   ..$ name  : chr &quot;Foundation&quot;</span></span>
+<span id="cb10-17"><a href="#cb10-17" tabindex="-1"></a><span class="co">#&gt;   ..$ budget: num NA</span></span>
+<span id="cb10-18"><a href="#cb10-18" tabindex="-1"></a><span class="co">#&gt;  $ 2.1:List of 2</span></span>
+<span id="cb10-19"><a href="#cb10-19" tabindex="-1"></a><span class="co">#&gt;   ..$ name  : chr &quot;Excavate&quot;</span></span>
+<span id="cb10-20"><a href="#cb10-20" tabindex="-1"></a><span class="co">#&gt;   ..$ budget: num 37000</span></span>
+<span id="cb10-21"><a href="#cb10-21" tabindex="-1"></a><span class="co">#&gt;  $ 2.2:List of 2</span></span>
+<span id="cb10-22"><a href="#cb10-22" tabindex="-1"></a><span class="co">#&gt;   ..$ name  : chr &quot;Steel Erection&quot;</span></span>
+<span id="cb10-23"><a href="#cb10-23" tabindex="-1"></a><span class="co">#&gt;   ..$ budget: num 9000</span></span>
+<span id="cb10-24"><a href="#cb10-24" tabindex="-1"></a><span class="co">#&gt;  $ 3  :List of 2</span></span>
+<span id="cb10-25"><a href="#cb10-25" tabindex="-1"></a><span class="co">#&gt;   ..$ name  : chr &quot;External&quot;</span></span>
+<span id="cb10-26"><a href="#cb10-26" tabindex="-1"></a><span class="co">#&gt;   ..$ budget: num NA</span></span>
+<span id="cb10-27"><a href="#cb10-27" tabindex="-1"></a><span class="co">#&gt;  $ 3.1:List of 2</span></span>
+<span id="cb10-28"><a href="#cb10-28" tabindex="-1"></a><span class="co">#&gt;   ..$ name  : chr &quot;Masonry Work&quot;</span></span>
+<span id="cb10-29"><a href="#cb10-29" tabindex="-1"></a><span class="co">#&gt;   ..$ budget: num 62000</span></span>
+<span id="cb10-30"><a href="#cb10-30" tabindex="-1"></a><span class="co">#&gt;  $ 3.2:List of 2</span></span>
+<span id="cb10-31"><a href="#cb10-31" tabindex="-1"></a><span class="co">#&gt;   ..$ name  : chr &quot;Building Finishes&quot;</span></span>
+<span id="cb10-32"><a href="#cb10-32" tabindex="-1"></a><span class="co">#&gt;   ..$ budget: num 21500</span></span>
+<span id="cb10-33"><a href="#cb10-33" tabindex="-1"></a><span class="co">#&gt;  $ top:List of 2</span></span>
+<span id="cb10-34"><a href="#cb10-34" tabindex="-1"></a><span class="co">#&gt;   ..$ name  : chr &quot;Construction of a House&quot;</span></span>
+<span id="cb10-35"><a href="#cb10-35" tabindex="-1"></a><span class="co">#&gt;   ..$ budget: num NA</span></span></code></pre></div>
 <p>We construct <em>update</em> and <em>validate</em> functions as
 follows:</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a>list_get <span class="ot">&lt;-</span> <span class="cf">function</span>(d, i) d[[i]]<span class="sc">$</span>budget</span>
-<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a>list_set <span class="ot">&lt;-</span> <span class="cf">function</span>(d, i, v) { d[[i]]<span class="sc">$</span>budget <span class="ot">=</span> v; d }</span>
-<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a>list_update <span class="ot">&lt;-</span> <span class="cf">function</span>(d, t, s) { <span class="fu">update_prop</span>(d, t, s, list_set, list_get) }</span>
-<span id="cb12-4"><a href="#cb12-4" tabindex="-1"></a>list_validate <span class="ot">&lt;-</span> <span class="cf">function</span>(t, d) <span class="fu">validate_ds</span>(t, d, <span class="at">get_keys =</span> <span class="cf">function</span>(l) <span class="fu">names</span>(l), <span class="at">get =</span> list_get)</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a>list_get <span class="ot">&lt;-</span> <span class="cf">function</span>(d, i) d[[i]]<span class="sc">$</span>budget</span>
+<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a>list_set <span class="ot">&lt;-</span> <span class="cf">function</span>(d, i, v) { d[[i]]<span class="sc">$</span>budget <span class="ot">=</span> v; d }</span>
+<span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a>list_update <span class="ot">&lt;-</span> <span class="cf">function</span>(d, t, s) { <span class="fu">update_prop</span>(d, t, s, list_set, list_get) }</span>
+<span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a>list_validate <span class="ot">&lt;-</span> <span class="cf">function</span>(t, d) <span class="fu">validate_ds</span>(t, d, <span class="at">get_keys =</span> <span class="cf">function</span>(l) <span class="fu">names</span>(l), <span class="at">get =</span> list_get)</span></code></pre></div>
 <p>The output of <code>rollup()</code> is as expected:</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a>list_result <span class="ot">&lt;-</span> <span class="fu">rollup</span>(wbs_tree, wbs_list, list_update, list_validate)</span>
-<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a><span class="fu">str</span>(list_result)</span>
-<span id="cb13-3"><a href="#cb13-3" tabindex="-1"></a><span class="co">#&gt; List of 10</span></span>
-<span id="cb13-4"><a href="#cb13-4" tabindex="-1"></a><span class="co">#&gt;  $ 1  :List of 2</span></span>
-<span id="cb13-5"><a href="#cb13-5" tabindex="-1"></a><span class="co">#&gt;   ..$ name  : chr &quot;Internal&quot;</span></span>
-<span id="cb13-6"><a href="#cb13-6" tabindex="-1"></a><span class="co">#&gt;   ..$ budget: num 86000</span></span>
-<span id="cb13-7"><a href="#cb13-7" tabindex="-1"></a><span class="co">#&gt;  $ 1.1:List of 2</span></span>
-<span id="cb13-8"><a href="#cb13-8" tabindex="-1"></a><span class="co">#&gt;   ..$ name  : chr &quot;Electrical&quot;</span></span>
-<span id="cb13-9"><a href="#cb13-9" tabindex="-1"></a><span class="co">#&gt;   ..$ budget: num 25000</span></span>
-<span id="cb13-10"><a href="#cb13-10" tabindex="-1"></a><span class="co">#&gt;  $ 1.2:List of 2</span></span>
-<span id="cb13-11"><a href="#cb13-11" tabindex="-1"></a><span class="co">#&gt;   ..$ name  : chr &quot;Plumbing&quot;</span></span>
-<span id="cb13-12"><a href="#cb13-12" tabindex="-1"></a><span class="co">#&gt;   ..$ budget: num 61000</span></span>
-<span id="cb13-13"><a href="#cb13-13" tabindex="-1"></a><span class="co">#&gt;  $ 2  :List of 2</span></span>
-<span id="cb13-14"><a href="#cb13-14" tabindex="-1"></a><span class="co">#&gt;   ..$ name  : chr &quot;Foundation&quot;</span></span>
-<span id="cb13-15"><a href="#cb13-15" tabindex="-1"></a><span class="co">#&gt;   ..$ budget: num 46000</span></span>
-<span id="cb13-16"><a href="#cb13-16" tabindex="-1"></a><span class="co">#&gt;  $ 2.1:List of 2</span></span>
-<span id="cb13-17"><a href="#cb13-17" tabindex="-1"></a><span class="co">#&gt;   ..$ name  : chr &quot;Excavate&quot;</span></span>
-<span id="cb13-18"><a href="#cb13-18" tabindex="-1"></a><span class="co">#&gt;   ..$ budget: num 37000</span></span>
-<span id="cb13-19"><a href="#cb13-19" tabindex="-1"></a><span class="co">#&gt;  $ 2.2:List of 2</span></span>
-<span id="cb13-20"><a href="#cb13-20" tabindex="-1"></a><span class="co">#&gt;   ..$ name  : chr &quot;Steel Erection&quot;</span></span>
-<span id="cb13-21"><a href="#cb13-21" tabindex="-1"></a><span class="co">#&gt;   ..$ budget: num 9000</span></span>
-<span id="cb13-22"><a href="#cb13-22" tabindex="-1"></a><span class="co">#&gt;  $ 3  :List of 2</span></span>
-<span id="cb13-23"><a href="#cb13-23" tabindex="-1"></a><span class="co">#&gt;   ..$ name  : chr &quot;External&quot;</span></span>
-<span id="cb13-24"><a href="#cb13-24" tabindex="-1"></a><span class="co">#&gt;   ..$ budget: num 83500</span></span>
-<span id="cb13-25"><a href="#cb13-25" tabindex="-1"></a><span class="co">#&gt;  $ 3.1:List of 2</span></span>
-<span id="cb13-26"><a href="#cb13-26" tabindex="-1"></a><span class="co">#&gt;   ..$ name  : chr &quot;Masonry Work&quot;</span></span>
-<span id="cb13-27"><a href="#cb13-27" tabindex="-1"></a><span class="co">#&gt;   ..$ budget: num 62000</span></span>
-<span id="cb13-28"><a href="#cb13-28" tabindex="-1"></a><span class="co">#&gt;  $ 3.2:List of 2</span></span>
-<span id="cb13-29"><a href="#cb13-29" tabindex="-1"></a><span class="co">#&gt;   ..$ name  : chr &quot;Building Finishes&quot;</span></span>
-<span id="cb13-30"><a href="#cb13-30" tabindex="-1"></a><span class="co">#&gt;   ..$ budget: num 21500</span></span>
-<span id="cb13-31"><a href="#cb13-31" tabindex="-1"></a><span class="co">#&gt;  $ top:List of 2</span></span>
-<span id="cb13-32"><a href="#cb13-32" tabindex="-1"></a><span class="co">#&gt;   ..$ name  : chr &quot;Construction of a House&quot;</span></span>
-<span id="cb13-33"><a href="#cb13-33" tabindex="-1"></a><span class="co">#&gt;   ..$ budget: num 215500</span></span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a>list_result <span class="ot">&lt;-</span> <span class="fu">rollup</span>(wbs_tree, wbs_list, list_update, list_validate)</span>
+<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a><span class="fu">str</span>(list_result)</span>
+<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a><span class="co">#&gt; List of 10</span></span>
+<span id="cb12-4"><a href="#cb12-4" tabindex="-1"></a><span class="co">#&gt;  $ 1  :List of 2</span></span>
+<span id="cb12-5"><a href="#cb12-5" tabindex="-1"></a><span class="co">#&gt;   ..$ name  : chr &quot;Internal&quot;</span></span>
+<span id="cb12-6"><a href="#cb12-6" tabindex="-1"></a><span class="co">#&gt;   ..$ budget: num 86000</span></span>
+<span id="cb12-7"><a href="#cb12-7" tabindex="-1"></a><span class="co">#&gt;  $ 1.1:List of 2</span></span>
+<span id="cb12-8"><a href="#cb12-8" tabindex="-1"></a><span class="co">#&gt;   ..$ name  : chr &quot;Electrical&quot;</span></span>
+<span id="cb12-9"><a href="#cb12-9" tabindex="-1"></a><span class="co">#&gt;   ..$ budget: num 25000</span></span>
+<span id="cb12-10"><a href="#cb12-10" tabindex="-1"></a><span class="co">#&gt;  $ 1.2:List of 2</span></span>
+<span id="cb12-11"><a href="#cb12-11" tabindex="-1"></a><span class="co">#&gt;   ..$ name  : chr &quot;Plumbing&quot;</span></span>
+<span id="cb12-12"><a href="#cb12-12" tabindex="-1"></a><span class="co">#&gt;   ..$ budget: num 61000</span></span>
+<span id="cb12-13"><a href="#cb12-13" tabindex="-1"></a><span class="co">#&gt;  $ 2  :List of 2</span></span>
+<span id="cb12-14"><a href="#cb12-14" tabindex="-1"></a><span class="co">#&gt;   ..$ name  : chr &quot;Foundation&quot;</span></span>
+<span id="cb12-15"><a href="#cb12-15" tabindex="-1"></a><span class="co">#&gt;   ..$ budget: num 46000</span></span>
+<span id="cb12-16"><a href="#cb12-16" tabindex="-1"></a><span class="co">#&gt;  $ 2.1:List of 2</span></span>
+<span id="cb12-17"><a href="#cb12-17" tabindex="-1"></a><span class="co">#&gt;   ..$ name  : chr &quot;Excavate&quot;</span></span>
+<span id="cb12-18"><a href="#cb12-18" tabindex="-1"></a><span class="co">#&gt;   ..$ budget: num 37000</span></span>
+<span id="cb12-19"><a href="#cb12-19" tabindex="-1"></a><span class="co">#&gt;  $ 2.2:List of 2</span></span>
+<span id="cb12-20"><a href="#cb12-20" tabindex="-1"></a><span class="co">#&gt;   ..$ name  : chr &quot;Steel Erection&quot;</span></span>
+<span id="cb12-21"><a href="#cb12-21" tabindex="-1"></a><span class="co">#&gt;   ..$ budget: num 9000</span></span>
+<span id="cb12-22"><a href="#cb12-22" tabindex="-1"></a><span class="co">#&gt;  $ 3  :List of 2</span></span>
+<span id="cb12-23"><a href="#cb12-23" tabindex="-1"></a><span class="co">#&gt;   ..$ name  : chr &quot;External&quot;</span></span>
+<span id="cb12-24"><a href="#cb12-24" tabindex="-1"></a><span class="co">#&gt;   ..$ budget: num 83500</span></span>
+<span id="cb12-25"><a href="#cb12-25" tabindex="-1"></a><span class="co">#&gt;  $ 3.1:List of 2</span></span>
+<span id="cb12-26"><a href="#cb12-26" tabindex="-1"></a><span class="co">#&gt;   ..$ name  : chr &quot;Masonry Work&quot;</span></span>
+<span id="cb12-27"><a href="#cb12-27" tabindex="-1"></a><span class="co">#&gt;   ..$ budget: num 62000</span></span>
+<span id="cb12-28"><a href="#cb12-28" tabindex="-1"></a><span class="co">#&gt;  $ 3.2:List of 2</span></span>
+<span id="cb12-29"><a href="#cb12-29" tabindex="-1"></a><span class="co">#&gt;   ..$ name  : chr &quot;Building Finishes&quot;</span></span>
+<span id="cb12-30"><a href="#cb12-30" tabindex="-1"></a><span class="co">#&gt;   ..$ budget: num 21500</span></span>
+<span id="cb12-31"><a href="#cb12-31" tabindex="-1"></a><span class="co">#&gt;  $ top:List of 2</span></span>
+<span id="cb12-32"><a href="#cb12-32" tabindex="-1"></a><span class="co">#&gt;   ..$ name  : chr &quot;Construction of a House&quot;</span></span>
+<span id="cb12-33"><a href="#cb12-33" tabindex="-1"></a><span class="co">#&gt;   ..$ budget: num 215500</span></span></code></pre></div>
 </div>
 <div id="example-with-a-tree" class="section level1">
 <h1>Example With A Tree</h1>
 <p>The tree can serve as the dataset with proper attributes and methods.
 To illustrate, we add the budget figures from our data frame as vertex
 attributes to the tree:</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a><span class="fu">library</span>(igraph)</span>
-<span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb14-3"><a href="#cb14-3" tabindex="-1"></a><span class="co">#&gt; Attaching package: &#39;igraph&#39;</span></span>
-<span id="cb14-4"><a href="#cb14-4" tabindex="-1"></a><span class="co">#&gt; The following objects are masked from &#39;package:stats&#39;:</span></span>
-<span id="cb14-5"><a href="#cb14-5" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb14-6"><a href="#cb14-6" tabindex="-1"></a><span class="co">#&gt;     decompose, spectrum</span></span>
-<span id="cb14-7"><a href="#cb14-7" tabindex="-1"></a><span class="co">#&gt; The following object is masked from &#39;package:base&#39;:</span></span>
-<span id="cb14-8"><a href="#cb14-8" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb14-9"><a href="#cb14-9" tabindex="-1"></a><span class="co">#&gt;     union</span></span>
-<span id="cb14-10"><a href="#cb14-10" tabindex="-1"></a>new_wbs_tree <span class="ot">&lt;-</span> <span class="fu">Reduce</span>(</span>
-<span id="cb14-11"><a href="#cb14-11" tabindex="-1"></a>  <span class="at">f =</span> <span class="cf">function</span>(g, k) <span class="fu">set_vertex_attr</span>(g, <span class="st">&#39;budget&#39;</span>, k, <span class="fu">df_get_by_id</span>(wbs_table, k, <span class="st">&#39;budget&#39;</span>)),</span>
-<span id="cb14-12"><a href="#cb14-12" tabindex="-1"></a>  <span class="at">x =</span> <span class="fu">names</span>(<span class="fu">V</span>(wbs_tree)),</span>
-<span id="cb14-13"><a href="#cb14-13" tabindex="-1"></a>  <span class="at">init =</span> wbs_tree</span>
-<span id="cb14-14"><a href="#cb14-14" tabindex="-1"></a>)</span>
-<span id="cb14-15"><a href="#cb14-15" tabindex="-1"></a>ib <span class="ot">&lt;-</span> <span class="fu">vertex_attr</span>(new_wbs_tree, <span class="st">&quot;budget&quot;</span>)</span>
-<span id="cb14-16"><a href="#cb14-16" tabindex="-1"></a><span class="fu">names</span>(ib) <span class="ot">&lt;-</span> <span class="fu">names</span>(<span class="fu">V</span>(new_wbs_tree))</span>
-<span id="cb14-17"><a href="#cb14-17" tabindex="-1"></a>ib</span>
-<span id="cb14-18"><a href="#cb14-18" tabindex="-1"></a><span class="co">#&gt;   top     1     2     3   1.1   1.2   2.1   2.2   3.1   3.2 </span></span>
-<span id="cb14-19"><a href="#cb14-19" tabindex="-1"></a><span class="co">#&gt;    NA    NA    NA    NA 25000 61000 37000  9000 62000 21500</span></span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a><span class="fu">library</span>(igraph)</span>
+<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-3"><a href="#cb13-3" tabindex="-1"></a><span class="co">#&gt; Attaching package: &#39;igraph&#39;</span></span>
+<span id="cb13-4"><a href="#cb13-4" tabindex="-1"></a><span class="co">#&gt; The following objects are masked from &#39;package:stats&#39;:</span></span>
+<span id="cb13-5"><a href="#cb13-5" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-6"><a href="#cb13-6" tabindex="-1"></a><span class="co">#&gt;     decompose, spectrum</span></span>
+<span id="cb13-7"><a href="#cb13-7" tabindex="-1"></a><span class="co">#&gt; The following object is masked from &#39;package:base&#39;:</span></span>
+<span id="cb13-8"><a href="#cb13-8" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-9"><a href="#cb13-9" tabindex="-1"></a><span class="co">#&gt;     union</span></span>
+<span id="cb13-10"><a href="#cb13-10" tabindex="-1"></a>new_wbs_tree <span class="ot">&lt;-</span> <span class="fu">Reduce</span>(</span>
+<span id="cb13-11"><a href="#cb13-11" tabindex="-1"></a>  <span class="at">f =</span> <span class="cf">function</span>(g, k) <span class="fu">set_vertex_attr</span>(g, <span class="st">&#39;budget&#39;</span>, k, <span class="fu">df_get_by_id</span>(wbs_table, k, <span class="st">&#39;budget&#39;</span>)),</span>
+<span id="cb13-12"><a href="#cb13-12" tabindex="-1"></a>  <span class="at">x =</span> <span class="fu">names</span>(<span class="fu">V</span>(wbs_tree)),</span>
+<span id="cb13-13"><a href="#cb13-13" tabindex="-1"></a>  <span class="at">init =</span> wbs_tree</span>
+<span id="cb13-14"><a href="#cb13-14" tabindex="-1"></a>)</span>
+<span id="cb13-15"><a href="#cb13-15" tabindex="-1"></a>ib <span class="ot">&lt;-</span> <span class="fu">vertex_attr</span>(new_wbs_tree, <span class="st">&quot;budget&quot;</span>)</span>
+<span id="cb13-16"><a href="#cb13-16" tabindex="-1"></a><span class="fu">names</span>(ib) <span class="ot">&lt;-</span> <span class="fu">names</span>(<span class="fu">V</span>(new_wbs_tree))</span>
+<span id="cb13-17"><a href="#cb13-17" tabindex="-1"></a>ib</span>
+<span id="cb13-18"><a href="#cb13-18" tabindex="-1"></a><span class="co">#&gt;   top     1     2     3   1.1   1.2   2.1   2.2   3.1   3.2 </span></span>
+<span id="cb13-19"><a href="#cb13-19" tabindex="-1"></a><span class="co">#&gt;    NA    NA    NA    NA 25000 61000 37000  9000 62000 21500</span></span></code></pre></div>
 <p>We construct <em>update</em> and <em>validate</em> functions as
 follows:</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a>tree_get <span class="ot">&lt;-</span> <span class="cf">function</span>(d, k) <span class="fu">vertex_attr</span>(d, <span class="st">&quot;budget&quot;</span>, k)</span>
-<span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a>tree_set <span class="ot">&lt;-</span> <span class="cf">function</span>(d, k, v) <span class="fu">set_vertex_attr</span>(d, <span class="st">&quot;budget&quot;</span>, k, v)</span>
-<span id="cb15-3"><a href="#cb15-3" tabindex="-1"></a>tree_update <span class="ot">&lt;-</span> <span class="cf">function</span>(d, t, s) <span class="fu">update_prop</span>(d, t, s, <span class="at">set =</span> tree_set, <span class="at">get =</span> tree_get)</span>
-<span id="cb15-4"><a href="#cb15-4" tabindex="-1"></a>tree_validate <span class="ot">&lt;-</span> <span class="cf">function</span>(t, d) <span class="fu">validate_ds</span>(t, d, <span class="at">get_keys =</span> <span class="cf">function</span>(d) <span class="fu">names</span>(<span class="fu">V</span>(d)), <span class="at">get =</span> tree_get)</span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a>tree_get <span class="ot">&lt;-</span> <span class="cf">function</span>(d, k) <span class="fu">vertex_attr</span>(d, <span class="st">&quot;budget&quot;</span>, k)</span>
+<span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a>tree_set <span class="ot">&lt;-</span> <span class="cf">function</span>(d, k, v) <span class="fu">set_vertex_attr</span>(d, <span class="st">&quot;budget&quot;</span>, k, v)</span>
+<span id="cb14-3"><a href="#cb14-3" tabindex="-1"></a>tree_update <span class="ot">&lt;-</span> <span class="cf">function</span>(d, t, s) <span class="fu">update_prop</span>(d, t, s, <span class="at">set =</span> tree_set, <span class="at">get =</span> tree_get)</span>
+<span id="cb14-4"><a href="#cb14-4" tabindex="-1"></a>tree_validate <span class="ot">&lt;-</span> <span class="cf">function</span>(t, d) <span class="fu">validate_ds</span>(t, d, <span class="at">get_keys =</span> <span class="cf">function</span>(d) <span class="fu">names</span>(<span class="fu">V</span>(d)), <span class="at">get =</span> tree_get)</span></code></pre></div>
 <p>The output of <code>rollup()</code> is as expected:</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a>tree_result <span class="ot">&lt;-</span> <span class="fu">rollup</span>(new_wbs_tree, new_wbs_tree, <span class="at">update =</span> tree_update, <span class="at">validate_ds =</span> tree_validate)</span>
-<span id="cb16-2"><a href="#cb16-2" tabindex="-1"></a>ob <span class="ot">&lt;-</span> <span class="fu">vertex_attr</span>(tree_result, <span class="st">&quot;budget&quot;</span>)</span>
-<span id="cb16-3"><a href="#cb16-3" tabindex="-1"></a><span class="fu">names</span>(ob) <span class="ot">&lt;-</span> <span class="fu">names</span>(<span class="fu">V</span>(tree_result))</span>
-<span id="cb16-4"><a href="#cb16-4" tabindex="-1"></a>ob</span>
-<span id="cb16-5"><a href="#cb16-5" tabindex="-1"></a><span class="co">#&gt;    top      1      2      3    1.1    1.2    2.1    2.2    3.1    3.2 </span></span>
-<span id="cb16-6"><a href="#cb16-6" tabindex="-1"></a><span class="co">#&gt; 215500  86000  46000  83500  25000  61000  37000   9000  62000  21500</span></span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a>tree_result <span class="ot">&lt;-</span> <span class="fu">rollup</span>(new_wbs_tree, new_wbs_tree, <span class="at">update =</span> tree_update, <span class="at">validate_ds =</span> tree_validate)</span>
+<span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a>ob <span class="ot">&lt;-</span> <span class="fu">vertex_attr</span>(tree_result, <span class="st">&quot;budget&quot;</span>)</span>
+<span id="cb15-3"><a href="#cb15-3" tabindex="-1"></a><span class="fu">names</span>(ob) <span class="ot">&lt;-</span> <span class="fu">names</span>(<span class="fu">V</span>(tree_result))</span>
+<span id="cb15-4"><a href="#cb15-4" tabindex="-1"></a>ob</span>
+<span id="cb15-5"><a href="#cb15-5" tabindex="-1"></a><span class="co">#&gt;    top      1      2      3    1.1    1.2    2.1    2.2    3.1    3.2 </span></span>
+<span id="cb15-6"><a href="#cb15-6" tabindex="-1"></a><span class="co">#&gt; 215500  86000  46000  83500  25000  61000  37000   9000  62000  21500</span></span></code></pre></div>
 </div>
 <div id="simple-fault-tree-analysis" class="section level1">
 <h1>Simple Fault Tree Analysis</h1>
@@ -813,53 +812,53 @@ tree.</p></li>
 #&gt; [6] No V in network                    -&gt;No voltage at input                
 #&gt; [7] Fuse burned                        -&gt;No voltage at input</code></pre>
 <p>Get and set methods for this example are simple and obvious:</p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" tabindex="-1"></a>df_get_fault_props <span class="ot">&lt;-</span> <span class="cf">function</span>(df, id) {</span>
-<span id="cb19-2"><a href="#cb19-2" tabindex="-1"></a>  <span class="fu">list</span>(</span>
-<span id="cb19-3"><a href="#cb19-3" tabindex="-1"></a>    <span class="at">type =</span> <span class="fu">df_get_by_id</span>(df, id, <span class="st">&quot;type&quot;</span>),</span>
-<span id="cb19-4"><a href="#cb19-4" tabindex="-1"></a>    <span class="at">prob =</span> <span class="fu">df_get_by_id</span>(df, id, <span class="st">&quot;prob&quot;</span>)</span>
-<span id="cb19-5"><a href="#cb19-5" tabindex="-1"></a>  )</span>
-<span id="cb19-6"><a href="#cb19-6" tabindex="-1"></a>}</span>
-<span id="cb19-7"><a href="#cb19-7" tabindex="-1"></a></span>
-<span id="cb19-8"><a href="#cb19-8" tabindex="-1"></a>df_set_fault_props <span class="ot">&lt;-</span> <span class="cf">function</span>(df, id, v) {</span>
-<span id="cb19-9"><a href="#cb19-9" tabindex="-1"></a>  <span class="fu">df_set_by_id</span>(df, id, <span class="st">&quot;prob&quot;</span>, v<span class="sc">$</span>prob)</span>
-<span id="cb19-10"><a href="#cb19-10" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" tabindex="-1"></a>df_get_fault_props <span class="ot">&lt;-</span> <span class="cf">function</span>(df, id) {</span>
+<span id="cb18-2"><a href="#cb18-2" tabindex="-1"></a>  <span class="fu">list</span>(</span>
+<span id="cb18-3"><a href="#cb18-3" tabindex="-1"></a>    <span class="at">type =</span> <span class="fu">df_get_by_id</span>(df, id, <span class="st">&quot;type&quot;</span>),</span>
+<span id="cb18-4"><a href="#cb18-4" tabindex="-1"></a>    <span class="at">prob =</span> <span class="fu">df_get_by_id</span>(df, id, <span class="st">&quot;prob&quot;</span>)</span>
+<span id="cb18-5"><a href="#cb18-5" tabindex="-1"></a>  )</span>
+<span id="cb18-6"><a href="#cb18-6" tabindex="-1"></a>}</span>
+<span id="cb18-7"><a href="#cb18-7" tabindex="-1"></a></span>
+<span id="cb18-8"><a href="#cb18-8" tabindex="-1"></a>df_set_fault_props <span class="ot">&lt;-</span> <span class="cf">function</span>(df, id, v) {</span>
+<span id="cb18-9"><a href="#cb18-9" tabindex="-1"></a>  <span class="fu">df_set_by_id</span>(df, id, <span class="st">&quot;prob&quot;</span>, v<span class="sc">$</span>prob)</span>
+<span id="cb18-10"><a href="#cb18-10" tabindex="-1"></a>}</span></code></pre></div>
 <p>In most applications (e.g., mass properties), the combining operation
 only the values to be combined, and is therefore passed only those
 values as input. In the case of a fault tree, however, the input for an
 AND gate are multiplied, whereas for an OR gate are summed. We can
 accommodate this situation by passing an optional <em>type</em> argument
 to the combiner follows:</p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" tabindex="-1"></a>combine_fault_props <span class="ot">&lt;-</span> <span class="cf">function</span>(vl, type) {</span>
-<span id="cb20-2"><a href="#cb20-2" tabindex="-1"></a>  <span class="fu">list</span>(</span>
-<span id="cb20-3"><a href="#cb20-3" tabindex="-1"></a>    <span class="at">prob =</span> <span class="fu">Reduce</span>(</span>
-<span id="cb20-4"><a href="#cb20-4" tabindex="-1"></a>      <span class="at">f =</span> <span class="cf">if</span> (type <span class="sc">==</span> <span class="st">&quot;and&quot;</span>) <span class="st">&quot;*&quot;</span> <span class="cf">else</span> <span class="st">&quot;+&quot;</span>,</span>
-<span id="cb20-5"><a href="#cb20-5" tabindex="-1"></a>      <span class="fu">Map</span>(<span class="at">f =</span> <span class="cf">function</span>(v) v<span class="sc">$</span>prob, vl)</span>
-<span id="cb20-6"><a href="#cb20-6" tabindex="-1"></a>    )</span>
-<span id="cb20-7"><a href="#cb20-7" tabindex="-1"></a>  )</span>
-<span id="cb20-8"><a href="#cb20-8" tabindex="-1"></a>}</span>
-<span id="cb20-9"><a href="#cb20-9" tabindex="-1"></a></span>
-<span id="cb20-10"><a href="#cb20-10" tabindex="-1"></a>update_fault_props <span class="ot">&lt;-</span> <span class="cf">function</span>(ds, parent_key, child_keys) {</span>
-<span id="cb20-11"><a href="#cb20-11" tabindex="-1"></a>  <span class="fu">update_prop</span>(</span>
-<span id="cb20-12"><a href="#cb20-12" tabindex="-1"></a>    ds,</span>
-<span id="cb20-13"><a href="#cb20-13" tabindex="-1"></a>    <span class="at">target =</span> parent_key,</span>
-<span id="cb20-14"><a href="#cb20-14" tabindex="-1"></a>    <span class="at">sources =</span> child_keys,</span>
-<span id="cb20-15"><a href="#cb20-15" tabindex="-1"></a>    <span class="at">set =</span> df_set_fault_props,</span>
-<span id="cb20-16"><a href="#cb20-16" tabindex="-1"></a>    <span class="at">get =</span> df_get_fault_props,</span>
-<span id="cb20-17"><a href="#cb20-17" tabindex="-1"></a>    <span class="at">combine =</span> <span class="cf">function</span>(vl)</span>
-<span id="cb20-18"><a href="#cb20-18" tabindex="-1"></a>      <span class="fu">combine_fault_props</span>(vl, <span class="fu">df_get_fault_props</span>(ds, parent_key)<span class="sc">$</span>type)</span>
-<span id="cb20-19"><a href="#cb20-19" tabindex="-1"></a>  )</span>
-<span id="cb20-20"><a href="#cb20-20" tabindex="-1"></a>}</span>
-<span id="cb20-21"><a href="#cb20-21" tabindex="-1"></a></span>
-<span id="cb20-22"><a href="#cb20-22" tabindex="-1"></a>validate_fault_props <span class="ot">&lt;-</span> <span class="cf">function</span>(fp) {</span>
-<span id="cb20-23"><a href="#cb20-23" tabindex="-1"></a>  <span class="cf">if</span> (fp<span class="sc">$</span>type <span class="sc">!=</span> <span class="st">&quot;basic&quot;</span>) <span class="fu">stop</span>(<span class="fu">sprintf</span>(<span class="st">&quot;invalid leaf node type %s&quot;</span>, fp<span class="sc">$</span>type))</span>
-<span id="cb20-24"><a href="#cb20-24" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">is.numeric</span>(fp<span class="sc">$</span>prob) <span class="sc">||</span> fp<span class="sc">$</span>prob <span class="sc">&lt;</span> <span class="fl">0.0</span> <span class="sc">||</span> fp<span class="sc">$</span>prob <span class="sc">&gt;</span> <span class="fl">1.0</span>)</span>
-<span id="cb20-25"><a href="#cb20-25" tabindex="-1"></a>    <span class="fu">stop</span>(<span class="fu">sprintf</span>(<span class="st">&quot;invalid probability value %f&quot;</span>, fp<span class="sc">$</span>prob))</span>
-<span id="cb20-26"><a href="#cb20-26" tabindex="-1"></a>  <span class="cn">TRUE</span></span>
-<span id="cb20-27"><a href="#cb20-27" tabindex="-1"></a>}</span>
-<span id="cb20-28"><a href="#cb20-28" tabindex="-1"></a></span>
-<span id="cb20-29"><a href="#cb20-29" tabindex="-1"></a>validate_fault_props_table <span class="ot">&lt;-</span> <span class="cf">function</span>(tree, df) {</span>
-<span id="cb20-30"><a href="#cb20-30" tabindex="-1"></a>  <span class="fu">validate_ds</span>(tree, df, df_get_ids, df_get_fault_props, validate_fault_props)</span>
-<span id="cb20-31"><a href="#cb20-31" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" tabindex="-1"></a>combine_fault_props <span class="ot">&lt;-</span> <span class="cf">function</span>(vl, type) {</span>
+<span id="cb19-2"><a href="#cb19-2" tabindex="-1"></a>  <span class="fu">list</span>(</span>
+<span id="cb19-3"><a href="#cb19-3" tabindex="-1"></a>    <span class="at">prob =</span> <span class="fu">Reduce</span>(</span>
+<span id="cb19-4"><a href="#cb19-4" tabindex="-1"></a>      <span class="at">f =</span> <span class="cf">if</span> (type <span class="sc">==</span> <span class="st">&quot;and&quot;</span>) <span class="st">&quot;*&quot;</span> <span class="cf">else</span> <span class="st">&quot;+&quot;</span>,</span>
+<span id="cb19-5"><a href="#cb19-5" tabindex="-1"></a>      <span class="fu">Map</span>(<span class="at">f =</span> <span class="cf">function</span>(v) v<span class="sc">$</span>prob, vl)</span>
+<span id="cb19-6"><a href="#cb19-6" tabindex="-1"></a>    )</span>
+<span id="cb19-7"><a href="#cb19-7" tabindex="-1"></a>  )</span>
+<span id="cb19-8"><a href="#cb19-8" tabindex="-1"></a>}</span>
+<span id="cb19-9"><a href="#cb19-9" tabindex="-1"></a></span>
+<span id="cb19-10"><a href="#cb19-10" tabindex="-1"></a>update_fault_props <span class="ot">&lt;-</span> <span class="cf">function</span>(ds, parent_key, child_keys) {</span>
+<span id="cb19-11"><a href="#cb19-11" tabindex="-1"></a>  <span class="fu">update_prop</span>(</span>
+<span id="cb19-12"><a href="#cb19-12" tabindex="-1"></a>    ds,</span>
+<span id="cb19-13"><a href="#cb19-13" tabindex="-1"></a>    <span class="at">target =</span> parent_key,</span>
+<span id="cb19-14"><a href="#cb19-14" tabindex="-1"></a>    <span class="at">sources =</span> child_keys,</span>
+<span id="cb19-15"><a href="#cb19-15" tabindex="-1"></a>    <span class="at">set =</span> df_set_fault_props,</span>
+<span id="cb19-16"><a href="#cb19-16" tabindex="-1"></a>    <span class="at">get =</span> df_get_fault_props,</span>
+<span id="cb19-17"><a href="#cb19-17" tabindex="-1"></a>    <span class="at">combine =</span> <span class="cf">function</span>(vl)</span>
+<span id="cb19-18"><a href="#cb19-18" tabindex="-1"></a>      <span class="fu">combine_fault_props</span>(vl, <span class="fu">df_get_fault_props</span>(ds, parent_key)<span class="sc">$</span>type)</span>
+<span id="cb19-19"><a href="#cb19-19" tabindex="-1"></a>  )</span>
+<span id="cb19-20"><a href="#cb19-20" tabindex="-1"></a>}</span>
+<span id="cb19-21"><a href="#cb19-21" tabindex="-1"></a></span>
+<span id="cb19-22"><a href="#cb19-22" tabindex="-1"></a>validate_fault_props <span class="ot">&lt;-</span> <span class="cf">function</span>(fp) {</span>
+<span id="cb19-23"><a href="#cb19-23" tabindex="-1"></a>  <span class="cf">if</span> (fp<span class="sc">$</span>type <span class="sc">!=</span> <span class="st">&quot;basic&quot;</span>) <span class="fu">stop</span>(<span class="fu">sprintf</span>(<span class="st">&quot;invalid leaf node type %s&quot;</span>, fp<span class="sc">$</span>type))</span>
+<span id="cb19-24"><a href="#cb19-24" tabindex="-1"></a>  <span class="cf">if</span> (<span class="sc">!</span><span class="fu">is.numeric</span>(fp<span class="sc">$</span>prob) <span class="sc">||</span> fp<span class="sc">$</span>prob <span class="sc">&lt;</span> <span class="fl">0.0</span> <span class="sc">||</span> fp<span class="sc">$</span>prob <span class="sc">&gt;</span> <span class="fl">1.0</span>)</span>
+<span id="cb19-25"><a href="#cb19-25" tabindex="-1"></a>    <span class="fu">stop</span>(<span class="fu">sprintf</span>(<span class="st">&quot;invalid probability value %f&quot;</span>, fp<span class="sc">$</span>prob))</span>
+<span id="cb19-26"><a href="#cb19-26" tabindex="-1"></a>  <span class="cn">TRUE</span></span>
+<span id="cb19-27"><a href="#cb19-27" tabindex="-1"></a>}</span>
+<span id="cb19-28"><a href="#cb19-28" tabindex="-1"></a></span>
+<span id="cb19-29"><a href="#cb19-29" tabindex="-1"></a>validate_fault_props_table <span class="ot">&lt;-</span> <span class="cf">function</span>(tree, df) {</span>
+<span id="cb19-30"><a href="#cb19-30" tabindex="-1"></a>  <span class="fu">validate_ds</span>(tree, df, df_get_ids, df_get_fault_props, validate_fault_props)</span>
+<span id="cb19-31"><a href="#cb19-31" tabindex="-1"></a>}</span></code></pre></div>
 <p>Calling <code>rollup()</code> in the usual manner yields:</p>
 <pre><code>#&gt;                                    id  type   prob
 #&gt; 1                   Water overflowing    or 0.3715
