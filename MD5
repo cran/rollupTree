@@ -1,12 +1,12 @@
-5be8d22d8b6e29abe801b9fef5f58147 *DESCRIPTION
+09d3e56f4e77bc2e87bd7f4d90d5aaed *DESCRIPTION
 68c64af5cbd150a35cf0ee85c1091626 *LICENSE
 d1658cc506db673481d7c4c16a420c85 *NAMESPACE
-7b24edf5f8b849147a0ffdf4eadfe2b8 *NEWS.md
+326d11e8e59a83724f0ac00499b2396e *NEWS.md
 48aa77674e2acbea593f2e88059c8d9f *R/fault_table.R
 5f297fbf1ff00fb039307b1590854627 *R/fault_tree.R
 252c8c954571eb584f59d8cedea9dc41 *R/rollup.R
 7f39e171ac72a462d326db30b411bfdf *R/test_dag.R
-ea254fc5b81e7b5694a673065f15892d *R/update_prop.R
+e1fe3dadeadcbedddb05625354cf3407 *R/update_prop.R
 727be5ae7f390ea4da802635dce55137 *R/wbs_table.R
 9f746971ff988c8d745f3e7aea83d0e7 *R/wbs_table_rollup.R
 dc9e5f875c7fd49198699f9bd930a400 *R/wbs_tree.R
@@ -20,7 +20,7 @@ dae02ab2edeb396be1d3af28721de38e *data/wbs_table.rda
 5f53b1f30e71699f83085680d5e6684b *data/wbs_tree.rda
 8ebacfd01201b6c4b2ee71cbf2aeeb8c *inst/doc/rollupTree.R
 1db2a0d7625c0727d2e64c7ef804f329 *inst/doc/rollupTree.Rmd
-02004751797a39132d6e05c9938a9076 *inst/doc/rollupTree.html
+f9ff948bd575e2614405cbd77e106245 *inst/doc/rollupTree.html
 adb4861c844f18a68d8c4a29b0c90aba *man/create_rollup_tree.Rd
 77ec5af9651f86d963029fb099848605 *man/default_validate_dag.Rd
 a5cd3f52384ce057cd9d50103da2cc47 *man/default_validate_tree.Rd
@@ -28,7 +28,7 @@ a5cd3f52384ce057cd9d50103da2cc47 *man/default_validate_tree.Rd
 b1bc30c942d744974c6170aaa6da1e85 *man/df_get_by_key.Rd
 72d524e11b1103b45b7898acd02acf37 *man/df_get_ids.Rd
 603485019c6f679b103dfa010d61366a *man/df_get_keys.Rd
-19c366d97f08bffe26e25a083ff66eaa *man/df_get_row_by_id.Rd
+6541b87d9d3ed1b6212032448842dd88 *man/df_get_row_by_id.Rd
 a136f429c13f247d57960f2552144a38 *man/df_get_row_by_key.Rd
 0de482bd0cd706c01be25a0d59f5a470 *man/df_set_by_id.Rd
 511f208b560a8b99f92dba08de4c09de *man/df_set_by_key.Rd
@@ -50,7 +50,7 @@ dc5f368477f1e1e9608dfcea90b864d3 *man/wbs_table_rollup.Rd
 640658a632ee5121eb2833333e182614 *man/wbs_tree.Rd
 d3c7ccbb247e7e96f3c931c8ab239812 *tests/testthat.R
 9502f4b44a98a77b5836405f9110b7e5 *tests/testthat/test-rollup.R
-3dcabff15bc6b57b2bbcb1eef6952e32 *tests/testthat/test-update_prop.R
+644f191ea34532e947d295f42e874005 *tests/testthat/test-update_prop.R
 0cf61be499ff0dd24bd6cfada33e1e46 *vignettes/fta-example.jpg
 902a2b2cfa95f4eea1de4c9b62ea1357 *vignettes/references.bib
 1db2a0d7625c0727d2e64c7ef804f329 *vignettes/rollupTree.Rmd
